@@ -54,6 +54,24 @@ class Plant(models.Model):
     temperature = models.CharField(max_length=1000)
     ideal_moisture = models.CharField(max_length=1000)
     fertilizer = models.CharField(max_length=1000)
+    plant_coefficient = models.FloatField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class DataTable(models.Model):
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    m_temp = models.FloatField(null=True)
+    m_moist = models.FloatField(null=True)
+    m_ec = models.FloatField(null=True)
+    m_npk = models.FloatField(null=True)
+    m_ph = models.FloatField(null=True)
+    date_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'data recorded at {self.date_time}'
+
 
 
 

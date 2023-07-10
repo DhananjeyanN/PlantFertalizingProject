@@ -1,0 +1,182 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Style the navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFF8F1;
+    color: #fff;
+    padding: .25em;
+}
+
+.navbar-brand {
+    font-size: 1.5em;
+    font-family: 'Varela Round';
+}
+
+.navbar-nav {
+    list-style: none;
+    display: flex;
+}
+
+.nav-item {
+    margin-left: 1em;
+}
+
+.nav-link {
+    color: #BB7D3C;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: #ddd;
+}
+.nav-brand img {
+ width: 75px; /* Change this as needed */
+ vertical-align: middle; margin-right: 10px;
+ }
+
+footer{
+text-align: center;
+padding: 20px;
+margin: 20px;
+display:block;
+}
+
+.posts {
+display: flex;
+flex-wrap: wrap;
+margin-top:20px;
+}
+
+.post {
+flex-basis: calc(20%-10px);
+margin: 10px;
+width: 275px;
+border: 1px solid blue;
+padding: 10px;
+
+}
+
+.post h2{
+margin: 10px;
+}
+
+.post img{
+height: auto;
+width: 100%;
+object-width: cover;
+margin-top:10px;
+margin-bottom:10px;
+}
+
+.reg-form{
+padding: 50px 550px;
+background-color: light-grey;
+border-radius: 5px;
+}
+
+.form-row{
+margin: 10px;
+padding: 10px;
+
+}
+
+.form-row label{
+margin-right: 20px;
+
+}
+
+.reg-form form{
+display:inline-block;
+
+}
+
+.dashboard {
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.user-info {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+    padding: 20px;
+}
+
+.user-info h2 {
+    margin-top: 0;
+}
+
+.user-info p {
+    margin-bottom: 0.5em;
+}
+
+.form-field {
+    background-color: #FFF8F1;
+    padding: 2px;
+    margin: 10px;
+}
+
+.form-button{
+text-align: center;
+}
+
+form button {
+    background-color: grey;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+
+}
+
+.messages {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert.info {
+    background-color: #d9edf7;
+    color: #31708f;
+}
+
+.alert.error {
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+.alert.success {
+    background-color: #FFF8F1;
+    color: #3c763d;
+}
+
+.alert.warning {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+}
+
+.comment_text {
+height:100px;
+width:280px;
+}
+
+.like {
+width:20px;
+}

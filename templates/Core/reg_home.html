@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>
+    Plant Home
+</h1>
+<body>
+<div class="plant-row">
+    {% if data %}
+    {% for plant in plants %}
+    <div class="plant-div">
+        <h2>{{plant.name}}</h2>
+        <h3>{{plant.moisture}}</h3>
+        <div>
+        <canvas id="myChart"></canvas>
+            <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ plants|safe }},
+            datasets: [{
+                label: 'Temperature',
+                data: {{ temps|safe }},
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+        </script>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+</div>
+
+<a href="{% url 'add_plant' %}">Add Plant</a>
+</body>
+{% endblock %}

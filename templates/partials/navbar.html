@@ -1,0 +1,30 @@
+<header>
+<nav class = 'navbar'>
+    <a href = "{% url 'index' %}" class = 'nav-brand'>
+        <img src="{{ profile.logo.url }}">
+    </a>
+    <ul class = 'navbar-nav'>
+        {% if user.is_authenticated %}
+        <li class = 'nav-item'><a class = 'nav-link' href = "{% url 'reg_index' %}">Home</a></li>
+        <li class = 'nav-item'> <a class = 'nav-link' href = "javascript:{document.querySelector('#logout').submit()}"> Logout</a></li>
+            <form id = 'logout' action = '{% url "logout" %}' method = 'post'>
+                {% csrf_token %}
+            <input type = 'hidden'>
+            </form>
+        {% else %}
+        <li class = 'nav-item'><a class = 'nav-link' href = "{% url 'index' %}">Home</a></li>
+        <li class = 'nav-item'><a class = 'nav-link' href = "{% url 'login' %}"> Login</a></li>
+        <li class = 'nav-item'><a class = 'nav-link' href = "{% url 'register' %}"> Register</a></li>
+        {% endif %}
+    </ul>
+</nav>
+</header>
+
+<!-- a tag for sending to another page -->
+<!-- every tag has multiple attributes-->
+<!-- href has link on where to go-->
+<!-- class attribute is for the css class name to style the tag-->
+<!--every element has class attribute and id attribute-->
+<!--li tag is for list item-->
+<!--ul tag is unordered list-->
+<!--ol tag is for ordered list-->
