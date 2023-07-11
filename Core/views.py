@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from Core.forms import AddPlantForm
 from Core.models import Plant, DataTable
 from accounts.models import SiteProfile
-
+from django.http import JsonResponse
+import json
 
 # Create your views here.
 
@@ -25,16 +26,15 @@ def reg_index(request):
     plant_names = [plant.name for plant in plants]
     data = {}
     for plant in plants:
-        plant_data = DataTable.objects.filter(id=plant.id)
+        plant_data = DataTable.objects.filter(plant=plant)
         print(plant_data, 'plant_name')
         print(data, 'data')
         print(plant, 'plant')
         data[plant.name] = {}
-        data[plant.name]['date_time'] = [plant.date_time for plant in plant_data]
+        data[plant.name]['date_time'] = [plant.date_time.isoformat() for plant in plant_data]
         data[plant.name]['m_moist'] = [plant.m_moist for plant in plant_data]
     plant_temperatures = [plant.temperature for plant in plants]
-    data = None
-    print(data, 'asdsadasdasdsad')
+    print(data)
     context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile, 'data':data}
     return render(request, 'Core/reg_home.html', context=context)
 

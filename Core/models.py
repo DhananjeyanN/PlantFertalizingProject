@@ -61,7 +61,7 @@ class Plant(models.Model):
 
 
 class DataTable(models.Model):
-    plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='data')
     m_temp = models.FloatField(null=True)
     m_moist = models.FloatField(null=True)
     m_ec = models.FloatField(null=True)

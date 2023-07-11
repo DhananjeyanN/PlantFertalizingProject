@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 {% load static %}
 {% block content %}
 <h1>
@@ -10,18 +11,17 @@
     {% for plant in plants %}
     <div class="plant-div">
         <h2>{{plant.name}}</h2>
-        <h3>{{plant.moisture}}</h3>
         <div>
-        <canvas id="myChart"></canvas>
+        <canvas id="myChart{{plant.id}}"></canvas>
             <script>
-    var ctx = document.getElementById('myChart').getContext('2d');
+    var ctx = document.getElementById('myChart{{plant.id}}').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: {{ plants|safe }},
+            labels:{{ data|get_item:plant.name+'.date_time'|safe }},
             datasets: [{
-                label: 'Temperature',
-                data: {{ temps|safe }},
+                label: 'Moisture',
+                data: {{ data|get_item:plant.name.m_moist|safe }},
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1
