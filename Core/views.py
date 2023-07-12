@@ -27,14 +27,13 @@ def reg_index(request):
     data = {}
     for plant in plants:
         plant_data = DataTable.objects.filter(plant=plant)
-        print(plant_data, 'plant_name')
-        print(data, 'data')
-        print(plant, 'plant')
-        data[plant.name] = {}
-        data[plant.name]['date_time'] = [plant.date_time.isoformat() for plant in plant_data]
-        data[plant.name]['m_moist'] = [plant.m_moist for plant in plant_data]
+        # data[plant.name] = {}
+        # data[plant.name]['date_time'] = [plant.date_time.isoformat() for plant in plant_data]
+        for p in plant_data:
+            data.update({plant.name:{'date_time':p.date_time}})
+            data.update({plant.name:{'m_moist':p.m_moist}})
     plant_temperatures = [plant.temperature for plant in plants]
-    print(data)
+    print(data, 'DATA')
     context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile, 'data':data}
     return render(request, 'Core/reg_home.html', context=context)
 
