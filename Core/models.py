@@ -1,4 +1,8 @@
+from django.contrib.auth.models import User
 from django.db import models
+
+from accounts.models import Profile
+
 
 # Create your models here.
 
@@ -46,6 +50,7 @@ from django.db import models
 #
 
 class Plant(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='plant_user')
     name = models.CharField(max_length=100)
     photo = models.ImageField(upload_to="photos/plants/%Y/%m/%d/")
     ec = models.CharField(max_length=1000)

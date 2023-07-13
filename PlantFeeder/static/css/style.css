@@ -224,3 +224,9 @@ margin:10px;
 padding:10px;
 border:1px solid blue;
 }
+
+/* New CSS rule for the chart */
+.chart-container {
+    width: 100%;
+    height: 400px; /* Or whatever height you want */
+}

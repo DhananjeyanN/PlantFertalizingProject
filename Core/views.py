@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -21,20 +22,18 @@ def index(request):
 
 def reg_index(request):
     profile = SiteProfile.objects.all().first()
-    plants = Plant.objects.all()
-    # data = DataTable.objects.filter(plant = )
-    plant_names = [plant.name for plant in plants]
+    plants = Plant.objects.filter(user = request.user)
+    plant_names = [plant.name.replace(" ", "_") for plant in plants]
     data = {}
+    last_24_hours_ago = datetime.now() - timedelta(hours=24)
     for plant in plants:
-        plant_data = DataTable.objects.filter(plant=plant)
-        # data[plant.name] = {}
-        # data[plant.name]['date_time'] = [plant.date_time.isoformat() for plant in plant_data]
-        for p in plant_data:
-            data.update({plant.name:{'date_time':p.date_time}})
-            data.update({plant.name:{'m_moist':p.m_moist}})
+        plant_data = DataTable.objects.filter(plant=plant, date_time__gte = last_24_hours_ago)
+        data_key = plant.name.replace(" ", "_")
+        data[data_key] = {}
+        data[data_key]['date_time'] = [plant_data_item.date_time.isoformat() for plant_data_item in plant_data]
+        data[data_key]['m_moist'] = [plant_data_item.m_moist for plant_data_item in plant_data]
     plant_temperatures = [plant.temperature for plant in plants]
-    print(data, 'DATA')
-    context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile, 'data':data}
+    context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile, 'data': json.dumps(data)}
     return render(request, 'Core/reg_home.html', context=context)
 
 
