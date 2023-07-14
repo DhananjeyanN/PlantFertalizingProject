@@ -1,51 +1,49 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
-<h1>
-    Plant Home
-</h1>
+{% extends 'base.html' %} {% load static %} {% block content %}
 <body>
-<div class="plant-row">
-    {% if data %}
-    {% for plant in plants %}
-    <div class="plant-div">
-        <h2>{{plant.name}}</h2>
-        <div class="chart-container">
-        <canvas id="myChart{{plant.id}}"></canvas>
-            <script>
-var data = JSON.parse('{{ data | safe }}');
-var ctx = document.getElementById('myChart{{plant.id}}').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: data['{{ plant.name }}'].date_time,
-        datasets: [{
-            label: 'Moisture',
-            data: data['{{ plant.name }}'].m_moist,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-    responsive: false,
-    maintainAspectRatio: false,
-
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-});
-</script>
+<div class="container mt-5"><h1 class="text-center mb-5"> Plant Home </h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4"> {% if data %} {% for plant in plants %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-header"><h2 class="card-title">{{plant.name}}</h2></div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="myChart{{plant.id}}"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
+<script>
+            var data = JSON.parse('{{ data | safe }}');
+            var ctx = document.getElementById('myChart{{plant.id}}').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data['{{ plant.name }}'].date_time,
+                    datasets: [{
+                        label: 'Moisture',
+                        data: data['{{ plant.name }}'].m_moist,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+        {% endfor %} {% else %}
+        <div class="col">
+            <div class="alert alert-warning" role="alert"> No data available!</div>
+        </div>
+        {% endif %}
     </div>
-    {% endfor %}
-    {% endif %}
-
+    <div class="mt-4"><a href="{% url 'add_plant' %}" class="btn btn-primary">Add Plant</a></div>
 </div>
-
-<a href="{% url 'add_plant' %}">Add Plant</a>
-</body>
-{% endblock %}
+</body>  {% endblock %}
