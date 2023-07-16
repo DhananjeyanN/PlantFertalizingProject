@@ -5,7 +5,10 @@
 <!--    Plant Home-->
 <!--</h1>-->
 <div class="img_div">
+    {% if profile.h1 %}
     <img src="{{ profile.h1.url }}" alt="CoverPic">
+        {% endif %}
+
 </div>
 <h4>
     {{ profile.about }}
