@@ -1,75 +1,93 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
-<body>
-<div class="container mt-5"><h1 class="text-center mb-5"> Plant Home </h1>
-    <div class="row row-cols-1 row-cols-md-3 g-4"> {% if data %}
-        {% for plant in plants %}
+{% extends 'base.html' %}
+{% load static %}
 
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-header"><h2 class="card-title">{{plant.name}}</h2></div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="myChart{{plant.id}}"></canvas>
+{% block content %}
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-5"> Plant Home </h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% if data %}
+            {% for plant in plants %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h2 class="card-title">{{plant.name}}</h2>
+                        <h3 class="card-title">{{plant.m_temp}}</h3>
+                        <h3 class="card-title">{{plant.m_ec}}</h3>
+                        <h3 class="card-title">{{plant.m_npk}}</h3>
+                        <h3 class="card-title">{{plant.m_ph}}</h3>
                     </div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="myChart{{plant.id}}"></canvas>
+                        </div>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{plant.name}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+            <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">{{plant.name}}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Plant type: {{plant.type}}</p>
+                            <p>Plant description: {{plant.description}}</p>
 
-        <p>Plant type: {{plant.type}}</p>
-        <p>Plant description: {{plant.description}}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-            var data = JSON.parse('{{ data | safe }}');
-            var ctx = document.getElementById('myChart{{plant.id}}').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data['{{ plant.name }}'].date_time,
-                    datasets: [{
-                        label: 'Moisture',
-                        data: data['{{ plant.name }}'].m_moist,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                            <div class="chart-container">
+                                <canvas id="modalChart{{plant.id}}"></canvas>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                var data = JSON.parse('{{ data | safe }}');
+                var ctx = document.getElementById('modalChart{{plant.id}}').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data['{{ plant.name }}'].date_time,
+                        datasets: [{
+                            label: 'Moisture',
+                            data: data['{{ plant.name }}'].m_moist,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
-        </script>
-        <p>{{plant.id}}</p>
-        {% endfor %} {% else %}
-        <div class="col">
-            <div class="alert alert-warning" role="alert"> No data available!</div>
-        </div>
+                });
+            </script>
+            <p>{{plant.id}}</p>
+            {% endfor %}
+        {% else %}
+            <div class="col">
+                <div class="alert alert-warning" role="alert"> No data available!</div>
+            </div>
         {% endif %}
     </div>
-    <div class="mt-4"><a href="{% url 'add_plant' %}" class="btn btn-primary">Add Plant</a></div>
+    <div class="mt-4">
+        <a href="{% url 'add_plant' %}" class="btn btn-primary">Add Plant</a>
+    </div>
 </div>
 
 <!-- Bootstrap Bundle with Popper -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
-</body>  {% endblock %}
+</body>
+{% endblock %}

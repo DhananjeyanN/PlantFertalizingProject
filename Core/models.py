@@ -67,15 +67,15 @@ class Plant(models.Model):
 
 class DataTable(models.Model):
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='data')
-    m_temp = models.FloatField(null=True)
-    m_moist = models.FloatField(null=True)
-    m_ec = models.FloatField(null=True)
-    m_npk = models.FloatField(null=True)
-    m_ph = models.FloatField(null=True)
+    m_temp = models.FloatField(null=True, blank=True)
+    m_moist = models.FloatField(null=True, blank=True)
+    m_ec = models.FloatField(null=True, blank=True)
+    m_npk = models.FloatField(null=True, blank=True)
+    m_ph = models.FloatField(null=True, blank=True)
     date_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'data recorded at {self.date_time}'
+        return f'data recorded at Date {self.date_time} EC {self.m_ec} NPK {self.m_npk} PH {self.m_ph} MOIST {self.m_moist}'
 
 
 
