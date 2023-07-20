@@ -26,21 +26,21 @@ def reg_index(request):
     plant_names = [plant.name.replace(" ", "_") for plant in plants]
     data = {}
     last_24_hours_ago = datetime.now() - timedelta(hours=500)
-    latest_data = {}
+    # latest_data = {}
+    latest_data = []
     for plant in plants:
         plant_dict= {}
         plant_data = DataTable.objects.filter(plant=plant, date_time__gte = last_24_hours_ago)
         latest_ec_data = DataTable.objects.filter(plant= plant).exclude(m_ec__isnull =True).latest('date_time')
         plant_dict['latest_ec'] = latest_ec_data.m_ec
-        latest_ph_data = DataTable.objects.filter(plant= plant).exclude(m_ph__isnull =True).latest('date_time')
         plant_dict['latest_ph'] = latest_ec_data.m_ph
-        latest_npk_data = DataTable.objects.filter(plant= plant).exclude(m_npk__isnull =True).latest('date_time')
         plant_dict['latest_npk'] = latest_ec_data.m_npk
-        latest_temp_data = DataTable.objects.filter(plant= plant).exclude(m_temp__isnull =True).latest('date_time')
         plant_dict['latest_temp'] = latest_ec_data.m_temp
-        latest_moist_data = DataTable.objects.filter(plant= plant).exclude(m_moist__isnull =True).latest('date_time')
         plant_dict['latest_moist'] = latest_ec_data.m_moist
-        latest_data[plant.name] = plant_dict
+        # plant_name = plant.name.replace(" ", "_")
+        # latest_data[plant_name] = plant_dict
+        plant_dict['name'] = plant.name
+        latest_data.append(plant_dict)
         data_key = plant.name.replace(" ", "_")
         data[data_key] = {}
         data[data_key]['date_time'] = [plant_data_item.date_time.isoformat() for plant_data_item in plant_data]

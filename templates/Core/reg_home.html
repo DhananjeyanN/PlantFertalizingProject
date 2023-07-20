@@ -8,13 +8,16 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
         {% if latest_data %}
-            {% for plant in plants %}
+            {% for plant_data in latest_data %}
             <div class="col">
                 <div class="card h-100">
                     <div class="card-header">
-                        <h2 class="card-title">{{plant.name}}</h2>
-                        <h3 class="card-title">{{latest_data[plant.name].latest_ec}}</h3>
-
+                        <h2 class="card-title">{{plant_data.name}}</h2>
+                        <h3 class="card-title">EC: {{plant_data.latest_ec}}</h3>
+                        <h3 class="card-title">pH: {{plant_data.latest_ph}}</h3>
+                        <h3 class="card-title">NPK: {{plant_data.latest_npk}}</h3>
+                        <h3 class="card-title">Temp: {{plant_data.latest_temp}}</h3>
+                        <h3 class="card-title">Moist: {{plant_data.latest_moist}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
