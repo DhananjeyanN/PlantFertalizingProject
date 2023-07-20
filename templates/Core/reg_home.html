@@ -6,16 +6,15 @@
 <div class="container mt-5">
     <h1 class="text-center mb-5"> Plant Home </h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% if data %}
+
+        {% if latest_data %}
             {% for plant in plants %}
             <div class="col">
                 <div class="card h-100">
                     <div class="card-header">
                         <h2 class="card-title">{{plant.name}}</h2>
-                        <h3 class="card-title">{{plant.m_temp}}</h3>
-                        <h3 class="card-title">{{plant.m_ec}}</h3>
-                        <h3 class="card-title">{{plant.m_npk}}</h3>
-                        <h3 class="card-title">{{plant.m_ph}}</h3>
+                        <h3 class="card-title">{{latest_data[plant.name].latest_ec}}</h3>
+
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
@@ -50,6 +49,7 @@
 
             <script>
                 var data = JSON.parse('{{ data | safe }}');
+                var latest_data = JSON.parse('{{ latest_data | safe }}');
                 var ctx = document.getElementById('modalChart{{plant.id}}').getContext('2d');
                 var myChart = new Chart(ctx, {
                     type: 'line',

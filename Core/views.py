@@ -47,7 +47,7 @@ def reg_index(request):
         data[data_key]['m_moist'] = [plant_data_item.m_moist for plant_data_item in plant_data]
     print(latest_data)
     plant_temperatures = [plant.temperature for plant in plants]
-    context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile, 'data': json.dumps(data)}
+    context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile, 'data': json.dumps(data), 'latest_data': latest_data}
     return render(request, 'Core/reg_home.html', context=context)
 
 
