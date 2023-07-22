@@ -9,7 +9,7 @@
                     <div class="chart-container">
                         <canvas id="myChart{{plant.id}}"></canvas>
                     </div>
-                    <a href="{% url 'reg_index_pop_up' %}">More Info</a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
                 </div>
             </div>
         </div>
