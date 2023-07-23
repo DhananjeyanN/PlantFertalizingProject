@@ -9,7 +9,8 @@
                     <div class="chart-container">
                         <canvas id="myChart{{plant.id}}"></canvas>
                     </div>
-                    <a href="{% url 'reg_index_pop_up' %}">More Info</a>
+                    <a href="{% url 'reg_index_pop_up' plant.id %}">More Info</a>
+
                 </div>
             </div>
         </div>

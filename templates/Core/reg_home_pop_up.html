@@ -1,13 +1,13 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 <body>
 <div class="container mt-5"><h1 class="text-center mb-5"> Plant Home </h1>
-    <div class="row row-cols-1 row-cols-md-3 g-4"> {% if data %} {% for plant in plants %}
+    <div class="row row-cols-1 row-cols-md-3 g-4"> {% if detail_data %} {% for p_field in p_fields %}
         <div class="col">
             <div class="card h-100">
                 <div class="card-header"><h2 class="card-title">{{plant.name}}</h2></div>
                 <div class="card-body">
                     <div class="chart-container">
-                        <canvas id="myChart{{plant.id}}"></canvas>
+                        <canvas id="myChart{{forloop.counter}}"></canvas>
                     </div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
                 </div>
@@ -39,15 +39,18 @@
 </div>
 <script>
 
-            var data = JSON.parse('{{ data | safe }}');
-            var ctx = document.getElementById('myChart{{plant.id}}').getContext('2d');
+            var data = JSON.parse('{{ detail_data | safe }}');
+            var dt_data = JSON.parse('{{ f_time | safe }}');
+            var ctx = document.getElementById('myChart{{forloop.counter}}').getContext('2d');
+            console.log(data['{{ p_field }}'])
+            console.log(dt_data[0]['hour'])
             var myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: data['{{ plant.name }}'].date_time,
+                    labels: '{{hours}}',
                     datasets: [{
-                        label: 'Moisture',
-                        data: data['{{ plant.name }}'].m_moist,
+                        label: '{{p_field}}',
+                        data: data['{{ p_field }}'],
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
