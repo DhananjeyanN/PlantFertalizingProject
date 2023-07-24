@@ -9,7 +9,14 @@
                     <div class="chart-container">
                         <canvas id="myChart{{plant.id}}"></canvas>
                     </div>
-                    <a href="{% url 'reg_index_pop_up' plant.id %}">More Info</a>
+<!--                    <a href="{% url 'reg_index_pop_up' plant.id %}">More Info</a>-->
+                        <a class="nav-link" href="javascript:{document.querySelector('#more_info').submit()}">More Info</a>
+                        <form id="more_info" action="{% url 'reg_index_pop_up' plant.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden">
+                        </form>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
+
 
                 </div>
             </div>
@@ -65,11 +72,79 @@
                 }
             });
         </script>
+        {% endfor %}
+        {% endif %}
+            <div class="row row-cols-1 row-cols-md-3 g-4"> {% if detail_data %} {% for p_field in p_fields %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-header"><h2 class="card-title">{{plant.name}}</h2></div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="myChart{{forloop.counter}}"></canvas>
+                    </div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{plant.name}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>EC: {{plant.ec}}</p>
+                <p>pH: {{plant.ph}}</p>
+                <p>NPK: {{plant.npk}}</p>
+                <p>Temperature: {{plant.temperature}}</p>
+                <p>Ideal Moisture: {{plant.ideal_moisture}}</p>
+                <p>Fertilizer: {{plant.fertilizer}}</p>
+                <div class="chart-container">
+                    <canvas id="detailChart{{plant.id}}"></canvas>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+            var data = JSON.parse('{{ detail_data | safe }}');
+            var dt_data = JSON.parse('{{ f_time | safe }}');
+            var ctx = document.getElementById('myChart{{forloop.counter}}').getContext('2d');
+            console.log(data['{{ p_field }}'])
+            console.log(dt_data[0]['hour'])
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: '{{hours}}',
+                    datasets: [{
+                        label: '{{p_field}}',
+                        data: data['{{ p_field }}'],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
         {% endfor %} {% else %}
         <div class="col">
             <div class="alert alert-warning" role="alert"> No data available!</div>
         </div>
         {% endif %}
+    </div>
     </div>
     <div class="mt-4"><a href="{% url 'add_plant' %}" class="btn btn-primary">Add Plant</a></div>
 </div>

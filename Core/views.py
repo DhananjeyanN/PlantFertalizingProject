@@ -134,4 +134,4 @@ def plant_details(request, plant_id):
         'f_time': json.dumps(formatted_timestamps),
         'hours': datetime_hours
     }
-    return render(request, 'Core/reg_home_pop_up.html', context=context)
+    return render(request, 'Core/reg_home.html', context=context)
