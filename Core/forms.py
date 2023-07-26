@@ -19,3 +19,12 @@ class AddPlantForm(forms.ModelForm):
     #         self.fields[field].widget.attrs['class'] = 'form-field'
     #         self.fields[field].widget.attrs['placeholder'] = f'Enter {field}'
 
+
+class EditPlantForm(forms.ModelForm):
+    class Meta:
+        model = Plant
+        fields = ['name', 'photo', 'ec', 'ph', 'npk', 'temperature', 'ideal_moisture', 'fertilizer']
+
+    def clean(self):
+        clean_data = super().clean()
+        name = clean_data.get("name")

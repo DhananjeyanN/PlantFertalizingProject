@@ -15,6 +15,7 @@
                             {% csrf_token %}
                             <input type="hidden">
                         </form>
+
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
 
 
@@ -38,6 +39,8 @@
                 <div class="chart-container">
                     <canvas id="detailChart{{plant.id}}"></canvas>
                 </div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal11">Edit</button>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -103,6 +106,7 @@
                 <div class="chart-container">
                     <canvas id="detailChart{{plant.id}}"></canvas>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -139,6 +143,23 @@
                 }
             });
         </script>
+                <div class="modal fade" id="exampleModal11" tabindex="-1" aria-labelledby="exampleModalLabel11" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel11">{{plant.name}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'edit_plant' plant.id %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         {% endfor %} {% else %}
         <div class="col">
             <div class="alert alert-warning" role="alert"> No data available!</div>

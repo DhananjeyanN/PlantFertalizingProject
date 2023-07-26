@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-from Core.forms import AddPlantForm
+from Core.forms import AddPlantForm, EditPlantForm
 from Core.models import Plant, DataTable
 from accounts.models import SiteProfile
 import json
@@ -135,3 +135,20 @@ def plant_details(request, plant_id):
         'hours': datetime_hours
     }
     return render(request, 'Core/reg_home.html', context=context)
+
+
+def edit_plant_form(request, plant_id):
+    profile = SiteProfile.objects.all().first()
+    plant = Plant.object.get(id = plant_id)
+    if request.method == 'POST':
+        form = EditPlantForm(request.POST, instance=plant)
+        if form.is_valid():
+            form.save()
+            return redirect('reg_index')
+        else:
+            messages.error('Form Not Valid!!!')
+
+    else:
+        form = EditPlantForm(instance=plant)
+    context = {'form': form, 'profile':profile}
+    return render(request,'Core/reg_home.html', context=context)
