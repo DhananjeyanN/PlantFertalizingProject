@@ -1,119 +1,125 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-5"> Plant Home </h1>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% if data %}
-                {% for plant in plants %}
-                    <!-- Your plant card structure here. -->
-            <div class="col">
-            <div class="card h-100">
-                <div class="card-header"><h2 class="card-title">{{plant.name}}</h2></div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="myChart{{plant.id}}"></canvas>
-                    </div>
-<!--                    <a href="{% url 'reg_index_pop_up' plant.id %}">More Info</a>-->
-                        <a class="nav-link" href="javascript:{document.querySelector('#more_info').submit()}">More Info</a>
-                        <h1>{{plant.id}}</h1>
-                        <form id="more_info" action="{% url 'reg_index_pop_up' plant.id %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden">
-                        </form>
-
-<!--                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>-->
-
-
-
-                </div>
-            </div>
-        </div>
-                {% endfor %}
-            {% endif %}
-
-            {% if detail_data %}
-                {% for p_field in p_fields %}
-                    <div class="col">
-                        <div class="card h-100">
-                            <div class="card-header"><h2 class="card-title">{{p_field.name}}</h2><h2 class="card-title">{{p_field}}</h2></div>
-                            <div class="card-body">
-                                <div class="chart-container">
-                                    <canvas id="myChartField{{forloop.counter}}"></canvas>
-                                </div>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#secondModalExample{{forloop.counter}}">More Info</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal fade" id="secondModalExample{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">{{p_field.name}}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Your p_field detail data here. -->
-                                            <div class="col">
-            <div class="card h-100">
-                <div class="card-header"><h2 class="card-title">{{plant.name}}</h2></div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="myChart{{forloop.counter}}"></canvas>
-                    </div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
-                </div>
-            </div>
-        </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        var data = JSON.parse('{{ detail_data | safe }}');
-                        var dt_data = JSON.parse('{{ f_time | safe }}');
-                        var ctx = document.getElementById('myChartField{{forloop.counter}}').getContext('2d');
-                        console.log(data['{{ p_field }}'])
-                        console.log(dt_data[0]['hour'])
-                        var myChart = new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: '{{hours}}',
-                                datasets: [{
-                                    label: '{{p_field}}',
-                                    data: data['{{ p_field }}'],
-                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                    borderColor: 'rgba(255, 99, 132, 1)',
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-                    </script>
-                {% endfor %}
-            {% else %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5"> Plant Home </h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% if data %}
+            {% for plant in plants %}
                 <div class="col">
-                    <div class="alert alert-warning" role="alert"> No data available!</div>
+                    <div class="card h-100">
+                        <div class="card-header"><h2 class="card-title">{{plant.name}}</h2></div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myChart{{plant.id}}"></canvas>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
+                        </div>
+                    </div>
                 </div>
-            {% endif %}
+
+                <!-- Modal Dialog for Each Plant -->
+                <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">{{plant.name}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                           <div class="modal-body">
+    <p>EC: {{plant.ec}}</p>
+    <p>pH: {{plant.ph}}</p>
+    <p>NPK: {{plant.npk}}</p>
+    <p>Temperature: {{plant.temperature}}</p>
+    <p>Ideal Moisture: {{plant.ideal_moisture}}</p>
+    <p>Fertilizer: {{plant.fertilizer}}</p>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartTemp{{plant.id}}"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartEC{{plant.id}}"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartNPK{{plant.id}}"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartPH{{plant.id}}"></canvas>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="mt-4"><a href="{% url 'add_plant' %}" class="btn btn-primary">Add Plant</a></div>
-</body>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    var data = JSON.parse('{{ data | safe }}');
+    var detail_data = JSON.parse('{{ detail_data | safe }}');
+
+    var charts = {};
+
+    function drawChart(canvasId, plantName, label, data_x,dataset) {
+        var ctx = document.getElementById(canvasId).getContext('2d');
+        if(charts[canvasId]) {  // If chart exists for the given canvasId, destroy it
+            charts[canvasId].destroy();
+        }
+        charts[canvasId] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data_x, // x-values (timestamps)
+                datasets: [{
+                    label: label,
+                    data: dataset, // y-values (moisture)
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // For Each Plant
+    {% for plant in plants %}
+    console.log(data['{{ plant.name }}'].m_moist);
+        // For Home Page Chart
+        drawChart('myChart{{plant.id}}', '{{plant.name}}', 'Moisture',data['{{ plant.name }}'].date_time, data['{{ plant.name }}'].m_moist);
+
+        // Modal 'show' Event
+        var myModalEl = document.getElementById('exampleModal{{plant.id}}');
+        myModalEl.addEventListener('show.bs.modal', function (e) {
+            // For Detailed Info Page Charts
+            drawChart('detailChartTemp{{plant.id}}', '{{plant.name}}', 'Temperature',detail_data['{{ plant.name }}'].date_time, detail_data['{{ plant.name }}'].m_temp);
+            drawChart('detailChartEC{{plant.id}}', '{{plant.name}}', 'EC', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ec);
+            drawChart('detailChartNPK{{plant.id}}', '{{plant.name}}', 'NPK', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_npk);
+            drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);
+        });
+    {% endfor %}
+</script>
 {% endblock %}
