@@ -75,8 +75,25 @@
     var detail_data = JSON.parse('{{ detail_data | safe }}');
 
     var charts = {};
-
+    // Converts a timestamp to hours
+function toHours(timestamp) {
+    var date = new Date(timestamp);
+    var hours = date.getHours();
+    var minutes = "0" + date.getMinutes();
+    var formattedTime = hours + ':' + minutes.substr(-2);
+    return formattedTime;
+}
+// Converts a timestamp to day
+function getDay(timestamp) {
+    var date = new Date(timestamp);
+    var day = date.getDate();  // Returns the day of the month
+    var month = date.getMonth() + 1;  // Returns the month (0 is January, so we must add 1)
+    var year = date.getFullYear();  // Returns the year
+    return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+}
     function drawChart(canvasId, plantName, label, data_x,dataset) {
+        var lastTimeStamp = data_x[data_x.length - 1];
+        var dayOfLastEntry = getDay(lastTimeStamp);
         var ctx = document.getElementById(canvasId).getContext('2d');
         if(charts[canvasId]) {  // If chart exists for the given canvasId, destroy it
             charts[canvasId].destroy();
@@ -84,9 +101,9 @@
         charts[canvasId] = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data_x, // x-values (timestamps)
+                labels: data_x.map(toHours), // x-values (timestamps)
                 datasets: [{
-                    label: label,
+                    label: `${label}-(${dayOfLastEntry})`,
                     data: dataset, // y-values (moisture)
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
