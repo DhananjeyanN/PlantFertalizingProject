@@ -17,11 +17,11 @@ def index(request):
     return render(request, 'Core/home.html', context=context)
 
 
-def reg_index(request):
-    s_x = [10,15,23,3,12]
-    s_y = [1,2,3,4,5]
+def reg_index(request, plant_id= 0):
+
     profile = SiteProfile.objects.all().first()
     if request.user.is_authenticated:
+
         plants = Plant.objects.filter(user=request.user)
         plant_names = [plant.name.replace(" ", "_") for plant in plants]
         data = {}
@@ -60,17 +60,21 @@ def reg_index(request):
             detail_data[data_key]['m_npk'] = [plant_data_item.m_npk for plant_data_item in plant_data]
             detail_data[data_key]['m_ph'] = [plant_data_item.m_ph for plant_data_item in plant_data]
         plant_ids = [plant.id for plant in plants]
-        print('DETAIL DATA')
-        print(detail_data)
-        print('DATA')
-        print(data)
 
-        print('LATEST DATA')
-        print(latest_data)
         plant_temperatures = [plant.temperature for plant in plants]
+        # if plant_id != 0:
+        #     plant = Plant.objects.get(id=plant_id)
+        #     if request.method == 'POST':
+        #         form = EditPlantForm(request.POST, instance=plant)
+        #         if form.is_valid():
+        #             form.save()
+        #             return redirect('reg_index')
+        #         else:
+        #             messages.error('Form Not Valid!!!')
+        #     form = EditPlantForm(instance=plant)
         context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile,
                    'data': json.dumps(data), 'latest_data': latest_data, 'detail_data': json.dumps(detail_data),
-                   "ids": json.dumps(plant_ids), 's_x':s_x, 's_y':s_y,
+                   "ids": json.dumps(plant_ids),
                    }
     else:
         context={'profile':profile}

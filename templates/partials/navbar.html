@@ -15,7 +15,7 @@
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reg_index' %}">Home</a>
+                        <a class="nav-link" href="{% url 'reg_index'%}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="javascript:{document.querySelector('#logout').submit()}">Logout</a>
