@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from Core.forms import AddPlantForm, EditPlantForm
 from Core.models import Plant, DataTable
@@ -17,8 +18,7 @@ def index(request):
     return render(request, 'Core/home.html', context=context)
 
 
-def reg_index(request, plant_id= 0):
-
+def reg_index(request, plant_id=0):
     profile = SiteProfile.objects.all().first()
     if request.user.is_authenticated:
 
@@ -54,7 +54,8 @@ def reg_index(request, plant_id= 0):
             data[data_key]['m_moist'] = [plant_data_item.m_moist for plant_data_item in plant_data]
             # For more detailed data
             detail_data[data_key] = {}
-            detail_data[data_key]['date_time'] = [plant_data_item.date_time.isoformat() for plant_data_item in plant_data]
+            detail_data[data_key]['date_time'] = [plant_data_item.date_time.isoformat() for plant_data_item in
+                                                  plant_data]
             detail_data[data_key]['m_temp'] = [plant_data_item.m_temp for plant_data_item in plant_data]
             detail_data[data_key]['m_ec'] = [plant_data_item.m_ec for plant_data_item in plant_data]
             detail_data[data_key]['m_npk'] = [plant_data_item.m_npk for plant_data_item in plant_data]
@@ -77,7 +78,7 @@ def reg_index(request, plant_id= 0):
                    "ids": json.dumps(plant_ids),
                    }
     else:
-        context={'profile':profile}
+        context = {'profile': profile}
     return render(request, 'Core/reg_home.html', context=context)
 
 
@@ -102,7 +103,7 @@ def add_plant(request):
 
 def plant_details(request, plant_id):
     profile = SiteProfile.objects.all().first()
-    plant = get_object_or_404(Plant, pk= plant_id)
+    plant = get_object_or_404(Plant, pk=plant_id)
     plant_dict = {}
     detail_data = {}
     last_24_hours_ago = datetime.now() - timedelta(hours=500)
@@ -115,7 +116,7 @@ def plant_details(request, plant_id):
     plant_dict['latest_temp'] = latest_ec_data.m_temp
     plant_dict['latest_moist'] = latest_ec_data.m_moist
     plant_dict['name'] = plant.name
-    print(plant_dict,'PLANT DICT')
+    print(plant_dict, 'PLANT DICT')
     # For more detailed data
 
     detail_data = {}
@@ -142,12 +143,12 @@ def plant_details(request, plant_id):
     detail_data['m_ph'] = [plant_data_item.m_ph for plant_data_item in plant_data]
     print(detail_data, 'DETAIL DATA')
     print(r_date_time, 'RECORDED DATE TIME')
-    context={
-        'latest_data':json.dumps(plant_dict),
-        'detail_data':json.dumps(detail_data),
-        'r_date_time':r_date_time,
-        'p_fields':plant_fields,
-        'plant':plant,
+    context = {
+        'latest_data': json.dumps(plant_dict),
+        'detail_data': json.dumps(detail_data),
+        'r_date_time': r_date_time,
+        'p_fields': plant_fields,
+        'plant': plant,
         'profile': profile,
         'f_time': json.dumps(formatted_timestamps),
         'hours': datetime_hours
@@ -157,7 +158,7 @@ def plant_details(request, plant_id):
 
 def edit_plant_form(request, plant_id):
     profile = SiteProfile.objects.all().first()
-    plant = Plant.object.get(id = plant_id)
+    plant = Plant.object.get(id=plant_id)
     if request.method == 'POST':
         form = EditPlantForm(request.POST, instance=plant)
         if form.is_valid():
@@ -168,5 +169,22 @@ def edit_plant_form(request, plant_id):
 
     else:
         form = EditPlantForm(instance=plant)
-    context = {'form': form, 'profile':profile}
-    return render(request,'Core/reg_home.html', context=context)
+    context = {'form': form, 'profile': profile}
+    return render(request, 'Core/reg_home.html', context=context)
+
+
+def update_plant(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        plant = Plant.objects.get(pk=data['id'])
+        plant.ec = data['ec']
+        plant.ph = data['ph']
+        plant.npk = data['npk']
+        plant.temperature = data['temperature']
+        plant.ideal_moisture = data['ideal_moisture']
+        plant.fertilizer = data['fertilizer']
+        plant.save()
+        print(plant.ideal_temperature, data, 'Ideal_temp')
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'error'})
