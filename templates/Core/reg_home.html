@@ -29,33 +29,37 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                            <div class="modal-body">
-                               <form action="{% url 'update_plant' %}"  method="post">
+                               <div class="plant_img">
+                                    <img src="{{ plant.photo.url }}" alt="" width="30" height="24">
+                                </div>
+                               <form action="{% url 'update_plant' plant.id %}"  method="post">
+                                   {% csrf_token %}
 <div class="form-group">
         <label for="ec{{plant.id}}">EC:</label>
-        <input type="text" class="form-control" id="ec{{plant.id}}" value="{{plant.ec}}">
+        <input type="text" class="form-control" name= "ec" id="ec{{plant.id}}" value="{{plant.ec}}">
     </div>
 <div class="form-group">
         <label for="ph{{plant.id}}">PH:</label>
-        <input type="text" class="form-control" id="ph{{plant.id}}" value="{{plant.ph}}">
+        <input type="text" class="form-control" name= "ph" id="ph{{plant.id}}" value="{{plant.ph}}">
     </div>
 <div class="form-group">
         <label for="npk{{plant.id}}">NPK:</label>
-        <input type="text" class="form-control" id="npk{{plant.id}}" value="{{plant.npk}}">
+        <input type="text" class="form-control" name= "npk" id="npk{{plant.id}}" value="{{plant.npk}}">
     </div>
 <div class="form-group">
         <label for="temperature{{plant.id}}">Temperature:</label>
-        <input type="text" class="form-control" id="temperature{{plant.id}}" value="{{plant.temperature}}">
+        <input type="text" class="form-control" name= "temperature" id="temperature{{plant.id}}" value="{{plant.temperature}}">
     </div>
 <div class="form-group">
         <label for="ideal_moisture{{plant.id}}">Moisture:</label>
-        <input type="text" class="form-control" id="ideal_moisture{{plant.id}}" value="{{plant.ideal_moisture}}">
+        <input type="text" class="form-control" name= "ideal_moisture" id="ideal_moisture{{plant.id}}" value="{{plant.ideal_moisture}}">
     </div>
 <div class="form-group">
         <label for="fertilizer{{plant.id}}">Fertilizer:</label>
-        <input type="text" class="form-control" id="fertilizer{{plant.id}}" value="{{plant.fertilizer}}">
+        <input type="text" class="form-control" name= "fertilizer" id="fertilizer{{plant.id}}" value="{{plant.fertilizer}}">
     </div>
                                <div class="modal-footer">
-    <button type="button" class="btn btn-primary" id="saveButton{{plant.id}}">Save</button>
+    <button type="submit" class="btn btn-primary" id="saveButton{{plant.id}}">Save</button>
 </div>
                                    </form>
     <div class="row">
@@ -165,42 +169,44 @@ function getDay(timestamp) {
             drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);
         });
     {% endfor %}
-    {% for plant in plants %}
-    document.getElementById("saveButton{{plant.id}}").addEventListener('click', function() {
-        var ec = document.getElementById("ec{{plant.id}}").value;
-        var ph = document.getElementById("ph{{plant.id}}").value;
-        var npk = document.getElementById("npk{{plant.id}}").value;
-        var temperature = document.getElementById("temperature{{plant.id}}").value;
-        var ideal_moisture = document.getElementById("ideal_moisture{{plant.id}}").value;
-        var fertilizer = document.getElementById("fertilizer{{plant.id}}").value;
+<!--    {% for plant in plants %}-->
+<!--    -->
+<!--    document.getElementById("saveButton{{plant.id}}").addEventListener('click', function() {-->
+<!--        var ec = document.getElementById("ec{{plant.id}}").value;-->
+<!--        var ph = document.getElementById("ph{{plant.id}}").value;-->
+<!--        var npk = document.getElementById("npk{{plant.id}}").value;-->
+<!--        var temperature = document.getElementById("temperature{{plant.id}}").value;-->
+<!--        var ideal_moisture = document.getElementById("ideal_moisture{{plant.id}}").value;-->
+<!--        var fertilizer = document.getElementById("fertilizer{{plant.id}}").value;-->
 
-        var updateData = {
-            'ec': ec,
-            'ph': ph,
-            'npk': npk,
-            'temperature': temperature,
-            'ideal_moisture': ideal_moisture,
-            'fertilizer': fertilizer,
-            'id': {{plant.id}}
-        };
+<!--        var updateData = {-->
+<!--            'ec': ec,-->
+<!--            'ph': ph,-->
+<!--            'npk': npk,-->
+<!--            'temperature': temperature,-->
+<!--            'ideal_moisture': ideal_moisture,-->
+<!--            'fertilizer': fertilizer,-->
+<!--            'id': {{plant.id}}-->
+<!--        };-->
+<!--        console.log(updateData);-->
 
-        fetch('/update_plant/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify(updateData)
-        }).then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            // You can update the page or notify the user of success here
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    });
-{% endfor %}
+<!--        fetch('/update_plant/', {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json',-->
+<!--                'X-CSRFToken': '{{ csrf_token }}'-->
+<!--            },-->
+<!--            body: JSON.stringify(updateData)-->
+<!--        }).then(response => response.json())-->
+<!--        .then(data => {-->
+<!--            console.log('Success:', data);-->
+<!--            // You can update the page or notify the user of success here-->
+<!--        })-->
+<!--        .catch((error) => {-->
+<!--            console.error('Error:', error);-->
+<!--        });-->
+<!--    });-->
+<!--{% endfor %}-->
 
 </script>
 {% endblock %}

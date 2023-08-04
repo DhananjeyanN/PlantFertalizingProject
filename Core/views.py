@@ -173,18 +173,19 @@ def edit_plant_form(request, plant_id):
     return render(request, 'Core/reg_home.html', context=context)
 
 
-def update_plant(request):
+def update_plant(request, plant_id):
+    print('UPDATING PLANT')
     if request.method == "POST":
-        data = json.loads(request.body)
-        plant = Plant.objects.get(pk=data['id'])
-        plant.ec = data['ec']
-        plant.ph = data['ph']
-        plant.npk = data['npk']
-        plant.temperature = data['temperature']
-        plant.ideal_moisture = data['ideal_moisture']
-        plant.fertilizer = data['fertilizer']
+        plant = Plant.objects.get(pk=plant_id)
+        plant.ec = request.POST['ec']
+        plant.ph = request.POST['ph']
+        plant.npk = request.POST['npk']
+        plant.temperature = request.POST['temperature']
+        plant.ideal_moisture = request.POST['ideal_moisture']
+        plant.fertilizer = request.POST['fertilizer']
         plant.save()
-        print(plant.ideal_temperature, data, 'Ideal_temp')
-        return JsonResponse({'status': 'success'})
+        print(plant.fertilizer, 'FERTILIZER')
+        print(plant.ideal_moisture, request.POST, 'Ideal_temp')
+        return redirect('reg_index')
 
     return JsonResponse({'status': 'error'})
