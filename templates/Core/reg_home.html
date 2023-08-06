@@ -6,207 +6,178 @@
     <h1 class="text-center mb-5"> Plant Home </h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% if data %}
-            {% for plant in plants %}
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-header"><h2 class="card-title">{{plant.name}}</h2></div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="myChart{{plant.id}}"></canvas>
-                            </div>
-
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{plant.id}}">More Info</button>
-                        </div>
-                    </div>
+        {% for plant in plants %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h2 class="card-title">{{plant.name}}</h2>
                 </div>
-
-                <!-- Modal Dialog for Each Plant -->
-                <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">{{plant.name}}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="myChart{{plant.id}}"></canvas>
+                    </div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal{{plant.id}}">More Info
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Dialog for Each Plant -->
+        <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{{plant.name}}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="plant-info">
+                            <div class="plant-img">
+                                <img src="{{ plant.photo.url }}">
                             </div>
-                           <div class="modal-body">
-                               <div class="plant_img">
-                                    <img src="{{ plant.photo.url }}" alt="" width="30" height="24">
+                            <form action="{% url 'update_plant' plant.id %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="ec{{plant.id}}">EC:</label>
+                                    <input type="text" class="form-control" name="ec" id="ec{{plant.id}}"
+                                           value="{{plant.ec}}">
                                 </div>
-                               <form action="{% url 'update_plant' plant.id %}"  method="post">
-                                   {% csrf_token %}
-<div class="form-group">
-        <label for="ec{{plant.id}}">EC:</label>
-        <input type="text" class="form-control" name= "ec" id="ec{{plant.id}}" value="{{plant.ec}}">
-    </div>
-<div class="form-group">
-        <label for="ph{{plant.id}}">PH:</label>
-        <input type="text" class="form-control" name= "ph" id="ph{{plant.id}}" value="{{plant.ph}}">
-    </div>
-<div class="form-group">
-        <label for="npk{{plant.id}}">NPK:</label>
-        <input type="text" class="form-control" name= "npk" id="npk{{plant.id}}" value="{{plant.npk}}">
-    </div>
-<div class="form-group">
-        <label for="temperature{{plant.id}}">Temperature:</label>
-        <input type="text" class="form-control" name= "temperature" id="temperature{{plant.id}}" value="{{plant.temperature}}">
-    </div>
-<div class="form-group">
-        <label for="ideal_moisture{{plant.id}}">Moisture:</label>
-        <input type="text" class="form-control" name= "ideal_moisture" id="ideal_moisture{{plant.id}}" value="{{plant.ideal_moisture}}">
-    </div>
-<div class="form-group">
-        <label for="fertilizer{{plant.id}}">Fertilizer:</label>
-        <input type="text" class="form-control" name= "fertilizer" id="fertilizer{{plant.id}}" value="{{plant.fertilizer}}">
-    </div>
-                               <div class="modal-footer">
-    <button type="submit" class="btn btn-primary" id="saveButton{{plant.id}}">Save</button>
-</div>
-                                   </form>
-    <div class="row">
-        <div class="col-lg-3">
-            <div class="chart-container">
-                <canvas id="detailChartTemp{{plant.id}}"></canvas>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="chart-container">
-                <canvas id="detailChartEC{{plant.id}}"></canvas>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="chart-container">
-                <canvas id="detailChartNPK{{plant.id}}"></canvas>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="chart-container">
-                <canvas id="detailChartPH{{plant.id}}"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <div class="form-group">
+                                    <label for="ph{{plant.id}}">PH:</label>
+                                    <input type="text" class="form-control" name="ph" id="ph{{plant.id}}"
+                                           value="{{plant.ph}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="npk{{plant.id}}">NPK:</label>
+                                    <input type="text" class="form-control" name="npk" id="npk{{plant.id}}"
+                                           value="{{plant.npk}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="temperature{{plant.id}}">Temperature:</label>
+                                    <input type="text" class="form-control" name="temperature"
+                                           id="temperature{{plant.id}}" value="{{plant.temperature}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ideal_moisture{{plant.id}}">Moisture:</label>
+                                    <input type="text" class="form-control" name="ideal_moisture"
+                                           id="ideal_moisture{{plant.id}}" value="{{plant.ideal_moisture}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="fertilizer{{plant.id}}">Fertilizer:</label>
+                                    <input type="text" class="form-control" name="fertilizer"
+                                           id="fertilizer{{plant.id}}" value="{{plant.fertilizer}}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" id="saveButton{{plant.id}}">Save
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="chart-container">
+                                    <canvas id="detailChartTemp{{plant.id}}"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="chart-container">
+                                    <canvas id="detailChartEC{{plant.id}}"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="chart-container">
+                                    <canvas id="detailChartNPK{{plant.id}}"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="chart-container">
+                                    <canvas id="detailChartPH{{plant.id}}"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
-            {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
         {% endif %}
     </div>
 </div>
-
 <script>
-    var data = JSON.parse('{{ data | safe }}');
-    var detail_data = JSON.parse('{{ detail_data | safe }}');
+      var data = JSON.parse('{{ data | safe }}');
+      var detail_data = JSON.parse('{{ detail_data | safe }}');
 
-    var charts = {};
-    // Converts a timestamp to hours
-function toHours(timestamp) {
-    var date = new Date(timestamp);
-    var hours = date.getHours();
-    var remaining_hours = 23 - hours;
-    var remaining_minutes = 60 - date.getMinutes();
-    if (remaining_minutes === 60){
-    remaining_hours += 1;
-     remaining_minutes = 0;}
-    var formattedTime = '-' + remaining_hours + ':' + remaining_minutes;
-    return formattedTime;
-}
-// Converts a timestamp to day
-function getDay(timestamp) {
-    var date = new Date(timestamp);
-    var day = date.getDate();  // Returns the day of the month
-    var month = date.getMonth() + 1;  // Returns the month (0 is January, so we must add 1)
-    var year = date.getFullYear();  // Returns the year
-    return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-}
-    function drawChart(canvasId, plantName, label, data_x,dataset) {
-        var lastTimeStamp = data_x[data_x.length - 1];
-        var dayOfLastEntry = getDay(lastTimeStamp);
-        var ctx = document.getElementById(canvasId).getContext('2d');
-        if(charts[canvasId]) {  // If chart exists for the given canvasId, destroy it
-            charts[canvasId].destroy();
-        }
-        charts[canvasId] = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: data_x.map(toHours), // x-values (timestamps)
-                datasets: [{
-                    label: `${label} (${dayOfLastEntry})`,
-                    data: dataset, // y-values (moisture)
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
+      var charts = {};
+      // Converts a timestamp to hours
+      function toHours(timestamp) {
+      var date = new Date(timestamp);
+      var hours = date.getHours();
+      var remaining_hours = 23 - hours;
+      var remaining_minutes = 60 - date.getMinutes();
+      if (remaining_minutes === 60){
+      remaining_hours += 1;
+       remaining_minutes = 0;}
+      var formattedTime = '-' + remaining_hours + ':' + remaining_minutes;
+      return formattedTime;
+      }
+      // Converts a timestamp to day
+      function getDay(timestamp) {
+      var date = new Date(timestamp);
+      var day = date.getDate();  // Returns the day of the month
+      var month = date.getMonth() + 1;  // Returns the month (0 is January, so we must add 1)
+      var year = date.getFullYear();  // Returns the year
+      return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+      }
+      function drawChart(canvasId, plantName, label, data_x,dataset) {
+          var lastTimeStamp = data_x[data_x.length - 1];
+          var dayOfLastEntry = getDay(lastTimeStamp);
+          var ctx = document.getElementById(canvasId).getContext('2d');
+          if(charts[canvasId]) {  // If chart exists for the given canvasId, destroy it
+              charts[canvasId].destroy();
+          }
+          charts[canvasId] = new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: data_x.map(toHours), // x-values (timestamps)
+                  datasets: [{
+                      label: `${label} (${dayOfLastEntry})`,
+                      data: dataset, // y-values (moisture)
+                      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                      borderColor: 'rgba(255, 99, 132, 1)',
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                      y: {
+                          beginAtZero: true
+                      }
+                  }
+              }
+          });
+      }
 
-    // For Each Plant
-    {% for plant in plants %}
-    console.log(data['{{ plant.name }}'].m_moist);
-        // For Home Page Chart
-        drawChart('myChart{{plant.id}}', '{{plant.name}}', 'Moisture',data['{{ plant.name }}'].date_time, data['{{ plant.name }}'].m_moist);
+      // For Each Plant
+      {% for plant in plants %}
+      console.log(data['{{ plant.name }}'].m_moist);
+          // For Home Page Chart
+          drawChart('myChart{{plant.id}}', '{{plant.name}}', 'Moisture',data['{{ plant.name }}'].date_time, data['{{ plant.name }}'].m_moist);
 
-        // Modal 'show' Event
-        var myModalEl = document.getElementById('exampleModal{{plant.id}}');
-        myModalEl.addEventListener('show.bs.modal', function (e) {
-            // For Detailed Info Page Charts
-            drawChart('detailChartTemp{{plant.id}}', '{{plant.name}}', 'Temperature',detail_data['{{ plant.name }}'].date_time, detail_data['{{ plant.name }}'].m_temp);
-            drawChart('detailChartEC{{plant.id}}', '{{plant.name}}', 'EC', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ec);
-            drawChart('detailChartNPK{{plant.id}}', '{{plant.name}}', 'NPK', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_npk);
-            drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);
-        });
-    {% endfor %}
-<!--    {% for plant in plants %}-->
-<!--    -->
-<!--    document.getElementById("saveButton{{plant.id}}").addEventListener('click', function() {-->
-<!--        var ec = document.getElementById("ec{{plant.id}}").value;-->
-<!--        var ph = document.getElementById("ph{{plant.id}}").value;-->
-<!--        var npk = document.getElementById("npk{{plant.id}}").value;-->
-<!--        var temperature = document.getElementById("temperature{{plant.id}}").value;-->
-<!--        var ideal_moisture = document.getElementById("ideal_moisture{{plant.id}}").value;-->
-<!--        var fertilizer = document.getElementById("fertilizer{{plant.id}}").value;-->
-
-<!--        var updateData = {-->
-<!--            'ec': ec,-->
-<!--            'ph': ph,-->
-<!--            'npk': npk,-->
-<!--            'temperature': temperature,-->
-<!--            'ideal_moisture': ideal_moisture,-->
-<!--            'fertilizer': fertilizer,-->
-<!--            'id': {{plant.id}}-->
-<!--        };-->
-<!--        console.log(updateData);-->
-
-<!--        fetch('/update_plant/', {-->
-<!--            method: 'POST',-->
-<!--            headers: {-->
-<!--                'Content-Type': 'application/json',-->
-<!--                'X-CSRFToken': '{{ csrf_token }}'-->
-<!--            },-->
-<!--            body: JSON.stringify(updateData)-->
-<!--        }).then(response => response.json())-->
-<!--        .then(data => {-->
-<!--            console.log('Success:', data);-->
-<!--            // You can update the page or notify the user of success here-->
-<!--        })-->
-<!--        .catch((error) => {-->
-<!--            console.error('Error:', error);-->
-<!--        });-->
-<!--    });-->
-<!--{% endfor %}-->
-
+          // Modal 'show' Event
+          var myModalEl = document.getElementById('exampleModal{{plant.id}}');
+          myModalEl.addEventListener('show.bs.modal', function (e) {
+              // For Detailed Info Page Charts
+              drawChart('detailChartTemp{{plant.id}}', '{{plant.name}}', 'Temperature',detail_data['{{ plant.name }}'].date_time, detail_data['{{ plant.name }}'].m_temp);
+              drawChart('detailChartEC{{plant.id}}', '{{plant.name}}', 'EC', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ec);
+              drawChart('detailChartNPK{{plant.id}}', '{{plant.name}}', 'NPK', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_npk);
+              drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);
+          });
+      {% endfor %}
 </script>
 {% endblock %}
