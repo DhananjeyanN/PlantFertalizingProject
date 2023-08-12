@@ -32,6 +32,7 @@ def register(request):
 
 
 def login(request):
+    profile = SiteProfile.objects.all().first()
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -47,7 +48,7 @@ def login(request):
             messages.error(request, "Incorrect Login")
             return redirect('login')
     form = AuthenticationForm()
-    context = {'form': form}
+    context = {'profile':profile, 'form': form}
     return render(request, 'accounts/login.html', context=context)
 
 

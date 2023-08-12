@@ -63,16 +63,6 @@ def reg_index(request, plant_id=0):
         plant_ids = [plant.id for plant in plants]
 
         plant_temperatures = [plant.temperature for plant in plants]
-        # if plant_id != 0:
-        #     plant = Plant.objects.get(id=plant_id)
-        #     if request.method == 'POST':
-        #         form = EditPlantForm(request.POST, instance=plant)
-        #         if form.is_valid():
-        #             form.save()
-        #             return redirect('reg_index')
-        #         else:
-        #             messages.error('Form Not Valid!!!')
-        #     form = EditPlantForm(instance=plant)
         context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile,
                    'data': json.dumps(data), 'latest_data': latest_data, 'detail_data': json.dumps(detail_data),
                    "ids": json.dumps(plant_ids),
@@ -99,78 +89,6 @@ def add_plant(request):
         'form': form,
     }
     return render(request, 'add_plant.html', context)
-
-
-def plant_details(request, plant_id):
-    profile = SiteProfile.objects.all().first()
-    plant = get_object_or_404(Plant, pk=plant_id)
-    plant_dict = {}
-    detail_data = {}
-    last_24_hours_ago = datetime.now() - timedelta(hours=500)
-    latest_data = []
-    plant_data = DataTable.objects.filter(plant=plant, date_time__gte=last_24_hours_ago)
-    latest_ec_data = DataTable.objects.filter(plant=plant).exclude(m_ec__isnull=True).latest('date_time')
-    plant_dict['latest_ec'] = latest_ec_data.m_ec
-    plant_dict['latest_ph'] = latest_ec_data.m_ph
-    plant_dict['latest_npk'] = latest_ec_data.m_npk
-    plant_dict['latest_temp'] = latest_ec_data.m_temp
-    plant_dict['latest_moist'] = latest_ec_data.m_moist
-    plant_dict['name'] = plant.name
-    print(plant_dict, 'PLANT DICT')
-    # For more detailed data
-
-    detail_data = {}
-    plant_fields = ['m_temp', 'm_ec', 'm_npk', 'm_ph']
-    r_date_time = [plant_data_item.date_time.isoformat() for plant_data_item in plant_data]
-    formatted_timestamps = []
-
-    for ts in r_date_time:
-        dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
-        dt_dict = {
-            'year': dt.year,
-            'month': dt.month,
-            'day': dt.day,
-            'hour': dt.hour,
-            'minute': dt.minute,
-        }
-        formatted_timestamps.append(dt_dict)
-        datetime_hours = [t['hour'] for t in formatted_timestamps]
-        print(datetime_hours, 'DATETIME HOURS')
-    print(formatted_timestamps, 'FORMATTED TIME STAMPS')
-    detail_data['m_temp'] = [plant_data_item.m_temp for plant_data_item in plant_data]
-    detail_data['m_ec'] = [plant_data_item.m_ec for plant_data_item in plant_data]
-    detail_data['m_npk'] = [plant_data_item.m_npk for plant_data_item in plant_data]
-    detail_data['m_ph'] = [plant_data_item.m_ph for plant_data_item in plant_data]
-    print(detail_data, 'DETAIL DATA')
-    print(r_date_time, 'RECORDED DATE TIME')
-    context = {
-        'latest_data': json.dumps(plant_dict),
-        'detail_data': json.dumps(detail_data),
-        'r_date_time': r_date_time,
-        'p_fields': plant_fields,
-        'plant': plant,
-        'profile': profile,
-        'f_time': json.dumps(formatted_timestamps),
-        'hours': datetime_hours
-    }
-    return render(request, 'Core/reg_home.html', context=context)
-
-
-def edit_plant_form(request, plant_id):
-    profile = SiteProfile.objects.all().first()
-    plant = Plant.object.get(id=plant_id)
-    if request.method == 'POST':
-        form = EditPlantForm(request.POST, instance=plant)
-        if form.is_valid():
-            form.save()
-            return redirect('reg_index')
-        else:
-            messages.error('Form Not Valid!!!')
-
-    else:
-        form = EditPlantForm(instance=plant)
-    context = {'form': form, 'profile': profile}
-    return render(request, 'Core/reg_home.html', context=context)
 
 
 def update_plant(request, plant_id):

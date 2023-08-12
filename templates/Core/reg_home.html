@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static %} #loads static files
 {% block content %}
 <body>
 <div class="container mt-5">
-    <h1 class="text-center mb-5"> Plant Home </h1>
+<!--    container mt-5 boostrap classes for styling-->
+    <h1 class="text-center mb-5"> Plant Home </h1> #displays heading
     <div class="row">
+<!-- div is used to contain parts of content of webpage  -->
         {% if data %}
         {% for plant in plants %}
         <div class="col-12 mt-3">
@@ -34,14 +36,15 @@
                         <!-- Use d-flex and justify-content-end to push button to the right -->
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal{{plant.id}}">More Info
+<!--            data-bs-toggle targets id given to render                -->
                         </button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Modal Dialog for Each Plant -->
-        <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+        <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- tabindex = -1 prevents this div from being displayed -->
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -196,9 +199,5 @@
               drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);
           });
       {% endfor %}
-
-
-
-
 </script>
 {% endblock %}
