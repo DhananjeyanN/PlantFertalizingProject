@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from accounts.models import SiteProfile
 from django.contrib import messages, auth
-
+from rest_framework.authtoken.models import Token
 from accounts.forms import RegistrationForm, ProfileForm
 from accounts.models import Profile
 

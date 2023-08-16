@@ -239,7 +239,26 @@ border:1px solid blue;
     display: inline-block;
 }
 
-.plant-img {
-height: 30px;
-width: 30px;
+.plant-img img {
+height: 400px;
+width: 400px;
 }
+
+.plant-img {
+flex: 1;
+max-width:200px;
+}
+
+.plant-info {
+display: flex;
+flex-direction: row;
+align-items: start;
+justify-content: space-around;
+}
+
+.plant-info form {
+max-width:200px;
+flex:1;
+
+}
+
