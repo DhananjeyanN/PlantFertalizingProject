@@ -14,3 +14,5 @@ class PlantListCreateView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(user= self.request.user)
