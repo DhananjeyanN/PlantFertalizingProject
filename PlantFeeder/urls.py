@@ -19,10 +19,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from PlantApi.views import PlantListCreateView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Core.urls')),
     path('', include('accounts.urls')),
-    path('api/', include('PlantApi.urls')),
+    path('', include('PlantApi.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt'))
 
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

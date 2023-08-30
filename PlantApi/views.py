@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .serializers import PlantSerializer
-from Core.models import Plant
+from .serializers import PlantSerializer, DataTableSerializer
+from Core.models import Plant, DataTable
 from Core.models import Plant
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -11,8 +11,12 @@ from rest_framework.permissions import IsAuthenticated
 class PlantListCreateView(generics.ListCreateAPIView):
     queryset = Plant.objects.all()
     serializer_class = PlantSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(user= self.request.user)
+
+class DataTableListCreateView(generics.ListCreateAPIView):
+    queryset = DataTable.objects.all()
+    serializer_class = DataTableSerializer
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]

@@ -6,6 +6,7 @@ from django.contrib import messages, auth
 from rest_framework.authtoken.models import Token
 from accounts.forms import RegistrationForm, ProfileForm
 from accounts.models import Profile
+import requests
 
 
 # Create your views here.
@@ -22,6 +23,8 @@ def register(request):
             password = form.cleaned_data.get('password')
             user.set_password(password)
             user.save()
+            user_profile = Profile(user=user)
+            user_profile.save()
             return redirect('login')
 
     else:
@@ -48,7 +51,7 @@ def login(request):
             messages.error(request, "Incorrect Login")
             return redirect('login')
     form = AuthenticationForm()
-    context = {'profile':profile, 'form': form}
+    context = {'profile': profile, 'form': form}
     return render(request, 'accounts/login.html', context=context)
 
 
@@ -61,3 +64,24 @@ def logout(request):
     return redirect('login')
 
 
+def profile(request, user_id):
+    user_profile = Profile.objects.get(user_id=user_id)
+    context = {'user_profile': user_profile}
+    return render(request, 'accounts/profile.html', context=context)
+
+
+def generate_api_key(request):
+    if request.method == 'POST':
+        url = 'http://localhost:8000/auth/jwt/create/'
+        data = requests.post(url, data={
+            'username':'Dhananjeyan',
+            'password':'Jicker1923',
+        })
+        response = data.json()
+        api_key = response.get('access', 'NOT FOUND')
+        user_profile = Profile.objects.get(user_id=request.user.id)
+        user_profile.api_token = api_key
+        user_profile.save()
+        print(api_key)
+        messages.success(request, 'API KEY GENERATED!!!')
+    return redirect('profile', request.user.id)

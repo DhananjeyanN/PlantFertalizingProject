@@ -9,7 +9,7 @@ class Profile(models.Model):
     avatar = models.ImageField(upload_to='avatars/')
     bio = models.TextField()
     dob = models.DateField(null=True, blank=True)
-    # friends = models.ManyToManyField(related_name='friends', blank=True)
+    api_token = models.TextField()
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name} {self.user.email}'
