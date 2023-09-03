@@ -20,3 +20,7 @@ class DataTableListCreateView(generics.ListCreateAPIView):
     serializer_class = DataTableSerializer
     # authentication_classes = [TokenAuthentication]
     # permission_classes = [IsAuthenticated]
+
+
+class PlantUpdateView(generics.UpdateAPIView):
+    queryset = Plant.objects.filter(id=plant_id)
