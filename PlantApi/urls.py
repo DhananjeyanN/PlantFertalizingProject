@@ -8,4 +8,5 @@ urlpatterns = [
     # path('api-token-auth',include('rest_framework.authtoken.urls')),
     path('plants', PlantListCreateView.as_view(), name='plant-list-create'),
     path('datatable', DataTableListCreateView.as_view(), name='data_table-list-create'),
+    path('update/<int:plant_id>', views.update_plant, name='update_plant'),
 ]
