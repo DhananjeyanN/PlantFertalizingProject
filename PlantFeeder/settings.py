@@ -158,5 +158,6 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = False  # This means the cookie won't require an HTTPS connection
+CSRF_COOKIE_SAMESITE = 'Lax'  # This allows the cookie to be sent in top-level navigations
