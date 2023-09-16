@@ -63,6 +63,34 @@ def update_data_table_entry(request, entry_id):
         serializer = DataTableSerializer(data_entry, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=200)
         else:
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=400)\
+
+@csrf_exempt
+@api_view(['POST'])
+def create_data_table_entry(request):
+    if request.method == 'POST':
+        serializer = DataTableSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer)
+            serializer.save()
+            return Response(serializer.data, status=201) #201 means created succefully
+        else:
+            return Response(serializer.errors, status=400) # 400 means some error but found
+
+
+@csrf_exempt
+@api_view(['DELETE'])
+def del_data_table_entry(request, entry_id):
+    try:
+        data_entry = DataTable.objects.get(pk=entry_id)
+        print(data_entry)
+    except DataTable.DoesNotExist:
+        return Response({'Error': 'Data entry not found!'}, status=404)
+
+    if request.method == 'DELETE':
+        data_entry.delete()
+        return Response({'message':'Data Entry Deleted'}, status=204)
+
+

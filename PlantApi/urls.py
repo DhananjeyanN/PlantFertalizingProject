@@ -10,5 +10,7 @@ urlpatterns = [
     path('datatable', DataTableListCreateView.as_view(), name='data_table-list-create'),
     path('update/<int:plant_id>/', views.update_plant, name='update_plant'),  # Corrected here
     path('datatable/update/<int:entry_id>/', views.update_data_table_entry, name='update_data_table_entry'),
+    path('datatable/add/', views.create_data_table_entry, name='create_data_table_entry'),
+    path('datatable/del/<int:entry_id>/', views.del_data_table_entry, name='delete_data_table_entry'),
 ]
 
