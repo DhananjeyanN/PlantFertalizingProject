@@ -29,22 +29,15 @@ class DataTableListCreateView(generics.ListCreateAPIView):
 
 
 # @csrf_exempt
-@api_view(['POST', 'PUT'])
-def update_plant(request, plant_id):
-    if request.method == 'GET':
-        return Response({'message': 'GET request received'}, status=200)
+@api_view(['GET'])
+def get_plant(request, plant_id):
     try:
         plant = Plant.objects.get(pk=plant_id)
-        print(plant)
     except Plant.DoesNotExist:
         return Response({'Error': 'Plant Not Found!!!'}, status=404)
-    if request.method == 'POST' or request.method == 'PUT':
-        serializer = PlantSerializer(plant, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=400)
+
+    serializer = PlantSerializer(plant)
+    return Response(serializer.data)
 
 
 @csrf_exempt
@@ -91,6 +84,6 @@ def del_data_table_entry(request, entry_id):
 
     if request.method == 'DELETE':
         data_entry.delete()
-        return Response({'message':'Data Entry Deleted'}, status=204)
+        return Response({'message': 'Data Entry Deleted'}, status=204)
 
 
