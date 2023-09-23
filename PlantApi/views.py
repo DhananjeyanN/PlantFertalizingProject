@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
@@ -37,7 +38,17 @@ def get_plant(request, plant_id):
         return Response({'Error': 'Plant Not Found!!!'}, status=404)
 
     serializer = PlantSerializer(plant)
-    return Response(serializer.data)
+    return Response(serializer.data)\
+
+@api_view(['GET'])
+def get_all_plants(request):
+    try:
+        plants = Plant.objects.all()
+        serializer = PlantSerializer(plants, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    except Plant.DoesNotExist:
+        return Response({'Error': 'Plant Not Found!!!'}, status=404)
+
 
 
 @csrf_exempt

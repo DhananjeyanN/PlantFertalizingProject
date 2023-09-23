@@ -72,23 +72,38 @@ def reg_index(request, plant_id=0):
     return render(request, 'Core/reg_home.html', context=context)
 
 
+# def add_plant(request):
+#     if request.method == 'POST':
+#         form = AddPlantForm(request.POST, request.FILES)  # Include request.FILES
+#         if form.is_valid():
+#             plant = form.save()
+#             data = DataTable(plant=plant)
+#             data.save()
+#             messages.success(request, 'Plant Added Successfully!!!')
+#             return redirect('index')
+#         else:
+#             messages.error(request, 'Invalid Form')
+#     else:
+#         form = AddPlantForm()
+#     context = {
+#         'form': form,
+#     }
+#     return render(request, 'add_plant.html', context)
+
 def add_plant(request):
     if request.method == 'POST':
-        form = AddPlantForm(request.POST, request.FILES)  # Include request.FILES
-        if form.is_valid():
-            plant = form.save()
-            data = DataTable(plant=plant)
-            data.save()
-            messages.success(request, 'Plant Added Successfully!!!')
-            return redirect('index')
-        else:
-            messages.error(request, 'Invalid Form')
-    else:
-        form = AddPlantForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'add_plant.html', context)
+        name = request.POST.get('plant_name')
+        pic = request.FILES.get('plant_pic')
+        ec = request.POST.get('ec')
+        ph = request.POST.get('ph')
+        npk = request.POST.get('npk')
+        temp = request.POST.get('temperature')
+        ideal_moist = request.POST.get('ideal_moisture')
+        fertilizer = request.POST.get('fertilizer')
+        plant_coefficient = request.POST.get('plant_coefficient')
+        plant = Plant(user=request.user, name=name, photo=pic, ec=ec, ph=ph, npk=npk, temperature=temp, ideal_moisture = ideal_moist, fertilizer=fertilizer, plant_coefficient=plant_coefficient)
+        plant.save()
+        return redirect('reg_index')
 
 
 def update_plant(request, plant_id):

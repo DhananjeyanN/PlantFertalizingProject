@@ -125,9 +125,11 @@
         </div>
         {% endfor %}
         {% endif %}
+        <div class="d-flex justify-content-center mt-4">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#AddPlantModal{{plant.id}}">Add Plant
+                data-bs-target="#AddPlantModal{{plant.id}}" style="margin-top:10px; padding:10px;">Add Plant
         </button>
+        </div>
                 <div class="modal fade" id="AddPlantModal{{plant.id}}" tabindex="-1" aria-labelledby="AddPlantModalLabel" aria-hidden="true">
 <!-- tabindex = -1 prevents this div from being displayed -->
             <div class="modal-dialog modal-xl">
@@ -177,6 +179,11 @@
                                     <label for="fertilizer{{plant.id}}">Fertilizer:</label>
                                     <input type="text" class="form-control" name="fertilizer"
                                            id="fertilizer" value="{{plant.fertilizer}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="plant_coefficient">Plant Coefficient:</label>
+                                    <input type="text" class="form-control" name="plant_coefficient"
+                                           id="plant_coefficient" value="{{plant.plant_coefficient}}">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary" id="saveButton">Save
