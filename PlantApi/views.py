@@ -43,7 +43,7 @@ def get_plant(request, plant_id):
 @api_view(['GET'])
 def get_all_plants(request):
     try:
-        plants = Plant.objects.all()
+        plants = Plant.objects.filter(user=request.user)
         serializer = PlantSerializer(plants, many=True)
         return JsonResponse(serializer.data, safe=False)
     except Plant.DoesNotExist:
