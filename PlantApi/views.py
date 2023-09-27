@@ -50,6 +50,29 @@ def get_all_plants(request):
         return Response({'Error': 'Plant Not Found!!!'}, status=404)
 
 
+@csrf_exempt
+@api_view(['POST', 'PUT'])
+def update_plant(request, plant_id):
+    if request.method == 'GET':
+        return Response({'message': 'GET request received'}, status=200)
+
+    try:
+        plant_entry = Plant.objects.get(pk=plant_id)
+    except Plant.DoesNotExist:
+        return Response({'Error': 'plant not found!'}, status=404)
+
+    if request.method == 'POST' or request.method == 'PUT':
+        data = request.data
+        data['user'] = request.user.id
+        print(data)
+        serializer = PlantSerializer(plant_entry, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        else:
+            return Response(serializer.errors, status=400)\
+
+
 
 @csrf_exempt
 @api_view(['POST', 'PUT'])
@@ -70,6 +93,19 @@ def update_data_table_entry(request, entry_id):
             return Response(serializer.data, status=200)
         else:
             return Response(serializer.errors, status=400)\
+
+
+@csrf_exempt
+@api_view(['GET'])
+def read_data_table_entry(request, entry_id):
+    if request.method == 'GET':
+        return Response({'message': 'GET request received'}, status=200)
+
+    try:
+        data_entry = DataTable.objects.get(pk=entry_id)
+        return data_entry
+    except DataTable.DoesNotExist:
+        return Response({'Error': 'Data entry not found!'}, status=404)
 
 @csrf_exempt
 @api_view(['POST'])

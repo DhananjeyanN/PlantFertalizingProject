@@ -52,7 +52,7 @@ from accounts.models import Profile
 class Plant(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='plant_user')
     name = models.CharField(max_length=100)
-    photo = models.ImageField(upload_to="photos/plants/%Y/%m/%d/")
+    photo = models.ImageField(upload_to="photos/plants/%Y/%m/%d/", blank=True, null=True)
     ec = models.CharField(max_length=1000)
     ph = models.CharField(max_length=1000)
     npk = models.CharField(max_length=1000)
