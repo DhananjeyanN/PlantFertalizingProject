@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
-
+from django.shortcuts import get_object_or_404
 from .serializers import PlantSerializer, DataTableSerializer
 from Core.models import Plant, DataTable
 from Core.models import Plant
@@ -81,10 +81,15 @@ def update_data_table_entry(request, entry_id):
         return Response({'message': 'GET request received'}, status=200)
 
     try:
-        data_entry = DataTable.objects.get(pk=entry_id)
-        print(data_entry)
+        data_entry = get_object_or_404(DataTable, uuid=entry_id)
+        print(data_entry, 'beannnnnns')
+        print(data_entry.__dict__)
+        print(request.data)
+        # {'plant_id': 2, 'uuid': 'cc09a0a8-c161-4115-8640-fe8e68e5e73a', 'm_temp': 1.0, 'm_moist': 2.0, 'm_ec': 1.0, 'm_npk': 2.0, 'm_ph': 1.0, 'date_time': datetime.datetime(2023, 10, 3, 4, 2, 15, 197382, tzinfo=datetime.timezone.utc)}
+        # {'plant_id': 2, 'uuid': 'cc09a0a8-c161-4115-8640-fe8e68e5e73a', 'm_temp': '999.000000', 'm_moist': '888.000000', 'm_ec': '333.000000', 'm_npk': '123.000000', 'm_ph': '11.000000', 'date_time': '2023-09-30 20:49:03'}
+
     except DataTable.DoesNotExist:
-        return Response({'Error': 'Data entry not found!'}, status=404)
+        return Response({'Error': 'Data entry not found In Update Plant!!!'}, status=404)
 
     if request.method == 'POST' or request.method == 'PUT':
         serializer = DataTableSerializer(data_entry, data=request.data)
@@ -92,7 +97,7 @@ def update_data_table_entry(request, entry_id):
             serializer.save()
             return Response(serializer.data, status=200)
         else:
-            return Response(serializer.errors, status=400)\
+            return Response(serializer.errors, status=400)
 
 
 @csrf_exempt

@@ -15,7 +15,7 @@ urlpatterns = [
     #Datatable urls
     path('datatable/add/', views.create_data_table_entry, name='create_data_table_entry'),
     path('datatable/read/<int:entry_id>/', views.read_data_table_entry, name='read_data_table_entry'),
-    path('datatable/update/<int:entry_id>/', views.update_data_table_entry, name='update_data_table_entry'),
+    path('datatable/update/<str:entry_id>/', views.update_data_table_entry, name='update_data_table_entry'),
     path('datatable/del/<int:entry_id>/', views.del_data_table_entry, name='delete_data_table_entry'),
 ]
 
