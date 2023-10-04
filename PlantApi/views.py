@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -84,7 +86,15 @@ def update_data_table_entry(request, entry_id):
         data_entry = get_object_or_404(DataTable, uuid=entry_id)
         print(data_entry, 'beannnnnns')
         print(data_entry.__dict__)
-        print(request.data)
+        data = request.data
+        data['m_temp'] = float(data['m_temp'])
+        data['m_moist'] = float(data['m_moist'])
+        data['m_ec'] = float(data['m_ec'])
+        data['m_ph'] = float(data['m_ph'])
+        data['m_npk'] = float(data['m_npk'])
+        data['plant'] = data_entry.plant.id
+        print(data, 'daaaaaata')
+
         # {'plant_id': 2, 'uuid': 'cc09a0a8-c161-4115-8640-fe8e68e5e73a', 'm_temp': 1.0, 'm_moist': 2.0, 'm_ec': 1.0, 'm_npk': 2.0, 'm_ph': 1.0, 'date_time': datetime.datetime(2023, 10, 3, 4, 2, 15, 197382, tzinfo=datetime.timezone.utc)}
         # {'plant_id': 2, 'uuid': 'cc09a0a8-c161-4115-8640-fe8e68e5e73a', 'm_temp': '999.000000', 'm_moist': '888.000000', 'm_ec': '333.000000', 'm_npk': '123.000000', 'm_ph': '11.000000', 'date_time': '2023-09-30 20:49:03'}
 
@@ -92,7 +102,7 @@ def update_data_table_entry(request, entry_id):
         return Response({'Error': 'Data entry not found In Update Plant!!!'}, status=404)
 
     if request.method == 'POST' or request.method == 'PUT':
-        serializer = DataTableSerializer(data_entry, data=request.data)
+        serializer = DataTableSerializer(data_entry, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=200)
