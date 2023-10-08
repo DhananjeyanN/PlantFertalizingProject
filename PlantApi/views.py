@@ -126,6 +126,11 @@ def read_data_table_entry(request, entry_id):
 @api_view(['POST'])
 def create_data_table_entry(request):
     if request.method == 'POST':
+        plant_id = request.data['plant_id']
+        plant_obj = get_object_or_404(Plant, id = plant_id)
+        data = request.data
+        data['plant'] = plant_obj.id
+        data.pop('plant_id')
         serializer = DataTableSerializer(data=request.data)
         if serializer.is_valid():
             print(serializer)
