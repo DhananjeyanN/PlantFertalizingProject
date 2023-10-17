@@ -6,7 +6,7 @@ from Core.models import Plant
 class AddPlantForm(forms.ModelForm):
     class Meta:
         model = Plant
-        fields = ['name', 'photo', 'ec', 'ph', 'npk', 'temperature', 'ideal_moisture', 'fertilizer']
+        fields = ['name', 'photo', 'ec', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'temperature', 'ideal_moisture', 'fertilizer']
 
     def clean(self):
         clean_data = super().clean()
@@ -23,7 +23,7 @@ class AddPlantForm(forms.ModelForm):
 class EditPlantForm(forms.ModelForm):
     class Meta:
         model = Plant
-        fields = ['name', 'photo', 'ec', 'ph', 'npk', 'temperature', 'ideal_moisture', 'fertilizer']
+        fields = ['name', 'photo', 'ec', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'temperature', 'ideal_moisture', 'fertilizer']
 
     def clean(self):
         clean_data = super().clean()

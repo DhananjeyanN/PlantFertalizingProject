@@ -70,12 +70,12 @@ def profile(request, user_id):
     return render(request, 'accounts/profile.html', context=context)
 
 
-def generate_api_key(request):
+def generate_api_key(request, password):
     if request.method == 'POST':
         url = 'http://localhost:8000/auth/jwt/create/'
         data = requests.post(url, data={
-            'username':'Dhananjeyan',
-            'password':'Jicker1923',
+            'username': request.user.username,
+            'password': password,
         })
         response = data.json()
         api_key = response.get('access', 'NOT FOUND')
