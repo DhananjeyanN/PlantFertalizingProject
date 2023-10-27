@@ -56,7 +56,7 @@
                             <div class="plant-img">
                                 <img src="{{ plant.photo.url }}">
                             </div>
-                            <form action="{% url 'update_plant' plant.id %}" method="post">
+                            <form action="{% url 'update_plant_c' plant.id %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="ec{{plant.id}}">EC:</label>
@@ -69,9 +69,19 @@
                                            value="{{plant.ph}}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="npk{{plant.id}}">NPK:</label>
-                                    <input type="text" class="form-control" name="npk" id="npk{{plant.id}}"
-                                           value="{{plant.npk}}">
+                                    <label for="nitrogen{{plant.id}}">Nitrogen:</label>
+                                    <input type="text" class="form-control" name="nitrogen" id="nitrogen{{plant.id}}"
+                                           value="{{plant.nitrogen}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phosphorus{{plant.id}}">Phosphorus:</label>
+                                    <input type="text" class="form-control" name="phosphorus" id="phosphorus{{plant.id}}"
+                                           value="{{plant.phosphorus}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="potassium{{plant.id}}">Potassium:</label>
+                                    <input type="text" class="form-control" name="potassium" id="potassium{{plant.id}}"
+                                           value="{{plant.potassium}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="temperature{{plant.id}}">Temperature:</label>
@@ -89,9 +99,28 @@
                                            id="fertilizer{{plant.id}}" value="{{plant.fertilizer}}">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary" id="saveButton{{plant.id}}">Save
-                                    </button>
+                                    <button type="submit" class="btn btn-primary" id="saveButton{{plant.id}}">Save</button>
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#confirm_delete{{plant.id}}">Del Plant</button>
                                 </div>
+                                <div class="modal" id="confirm_delete{{plant.id}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm Delete!!!</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body"><p>Are You Sure???</p></div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><a href="{% url 'delete_plant' plant.id %}">Delete</a></button>
+                    </form>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
                             </form>
                         </div>
                         <div class="row">
@@ -107,7 +136,17 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="chart-container">
-                                    <canvas id="detailChartNPK{{plant.id}}"></canvas>
+                                    <canvas id="detailChartNitrogen{{plant.id}}"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="chart-container">
+                                    <canvas id="detailChartPhosphorus{{plant.id}}"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="chart-container">
+                                    <canvas id="detailChartPotassium{{plant.id}}"></canvas>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -125,6 +164,7 @@
         </div>
         {% endfor %}
         {% endif %}
+
         <div class="d-flex justify-content-center mt-4">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#AddPlantModal{{plant.id}}" style="margin-top:10px; padding:10px;">Add Plant
@@ -161,9 +201,19 @@
                                            value="{{plant.ph}}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="npk{{plant.id}}">NPK:</label>
-                                    <input type="text" class="form-control" name="npk" id="npk"
-                                           value="{{plant.npk}}">
+                                    <label for="nitrogen{{plant.id}}">Nitrogen:</label>
+                                    <input type="text" class="form-control" name="nitrogen" id="nitrogen{{plant.id}}"
+                                           value="{{plant.nitrogen}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phosphorus{{plant.id}}">Phosphorus:</label>
+                                    <input type="text" class="form-control" name="phosphorus" id="phosphorus{{plant.id}}"
+                                           value="{{plant.phosphorus}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="potassium{{plant.id}}">Potassium:</label>
+                                    <input type="text" class="form-control" name="potassium" id="potassium{{plant.id}}"
+                                           value="{{plant.potassium}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="temperature{{plant.id}}">Temperature:</label>
@@ -198,6 +248,7 @@
                 </div>
             </div>
         </div>
+
 
     </div>
 
@@ -270,7 +321,9 @@
               // For Detailed Info Page Charts
               drawChart('detailChartTemp{{plant.id}}', '{{plant.name}}', 'Temperature',detail_data['{{ plant.name }}'].date_time, detail_data['{{ plant.name }}'].m_temp);
               drawChart('detailChartEC{{plant.id}}', '{{plant.name}}', 'EC', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ec);
-              drawChart('detailChartNPK{{plant.id}}', '{{plant.name}}', 'NPK', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_npk);
+              drawChart('detailChartNitrogen{{plant.id}}', '{{plant.name}}', 'Nitrogen', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_nitrogen);
+              drawChart('detailChartPhosphorus{{plant.id}}', '{{plant.name}}', 'Phosphorus', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_phosphorus);
+              drawChart('detailChartPotassium{{plant.id}}', '{{plant.name}}', 'Potassium', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_potassium);
               drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);
           });
       {% endfor %}

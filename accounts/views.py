@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
@@ -70,18 +71,23 @@ def profile(request, user_id):
     return render(request, 'accounts/profile.html', context=context)
 
 
-def generate_api_key(request, password):
+def generate_api_key(request):
     if request.method == 'POST':
         url = 'http://localhost:8000/auth/jwt/create/'
-        data = requests.post(url, data={
-            'username': request.user.username,
-            'password': password,
-        })
-        response = data.json()
-        api_key = response.get('access', 'NOT FOUND')
-        user_profile = Profile.objects.get(user_id=request.user.id)
-        user_profile.api_token = api_key
-        user_profile.save()
-        print(api_key)
-        messages.success(request, 'API KEY GENERATED!!!')
+        password = request.POST.get('password')
+        user = authenticate(username=request.user.username, password=password)
+        if user is not None:
+            data = requests.post(url, data={
+                'username': user.username,
+                'password': password,
+            })
+            response = data.json()
+            api_key = response.get('access', 'NOT FOUND')
+            user_profile = Profile.objects.get(user_id=request.user.id)
+            user_profile.api_token = api_key
+            user_profile.save()
+            print(api_key)
+            messages.success(request, 'API KEY GENERATED!!!')
+        else:
+            messages.error(request, 'Incorrect Password!!!')
     return redirect('profile', request.user.id)

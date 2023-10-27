@@ -4,7 +4,6 @@
     <h1>
     Register
     </h1>
-    {% include 'partials/alerts.html' %}
     <form method="post" action="{% url 'register' %}">
         {% csrf_token %}
         {{ form.as_p }}

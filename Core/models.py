@@ -80,7 +80,7 @@ class DataTable(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'data recorded at Date {self.date_time} EC {self.m_ec} NPK {self.m_npk} PH {self.m_ph} MOIST {self.m_moist}'
+        return f'data recorded at Date {self.date_time} EC {self.m_ec} Nitrogen {self.m_nitrogen} Phosphorus {self.m_phosphorus} Potassium {self.m_potassium} PH {self.m_ph} MOIST {self.m_moist}'
 
 
 

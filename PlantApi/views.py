@@ -91,7 +91,9 @@ def update_data_table_entry(request, entry_id):
         data['m_moist'] = float(data['m_moist'])
         data['m_ec'] = float(data['m_ec'])
         data['m_ph'] = float(data['m_ph'])
-        data['m_npk'] = float(data['m_npk'])
+        data['m_nitrogen'] = float(data['m_nitrogen'])
+        data['m_phosphorus'] = float(data['m_phosphorus'])
+        data['m_potassium'] = float(data['m_potassium'])
         data['plant'] = data_entry.plant.id
         print(data, 'daaaaaata')
 
@@ -129,6 +131,7 @@ def create_data_table_entry(request):
         plant_id = request.data['plant_id']
         plant_obj = get_object_or_404(Plant, id = plant_id)
         data = request.data
+        print(request.data)
         data['plant'] = plant_obj.id
         data.pop('plant_id')
         serializer = DataTableSerializer(data=request.data)

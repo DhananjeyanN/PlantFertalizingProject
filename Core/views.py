@@ -18,7 +18,7 @@ def index(request):
     return render(request, 'Core/home.html', context=context)
 
 
-def reg_index(request, plant_id=0):
+def reg_index(request):
     profile = SiteProfile.objects.all().first()
     if request.user.is_authenticated:
 
@@ -36,13 +36,17 @@ def reg_index(request, plant_id=0):
                 latest_ec_data = DataTable.objects.filter(plant=plant).exclude(m_ec__isnull=True).latest('date_time')
                 plant_dict['latest_ec'] = latest_ec_data.m_ec
                 plant_dict['latest_ph'] = latest_ec_data.m_ph
-                plant_dict['latest_npk'] = latest_ec_data.m_npk
+                plant_dict['latest_nitrogen'] = latest_ec_data.m_nitrogen
+                plant_dict['latest_m_phosphorus'] = latest_ec_data.m_phosphorus
+                plant_dict['latest_potassium'] = latest_ec_data.m_potassium
                 plant_dict['latest_temp'] = latest_ec_data.m_temp
                 plant_dict['latest_moist'] = latest_ec_data.m_moist
             else:
                 plant_dict['latest_ec'] = None
                 plant_dict['latest_ph'] = None
-                plant_dict['latest_npk'] = None
+                plant_dict['latest_nitrogen'] = None
+                plant_dict['latest_phosphorus'] = None
+                plant_dict['latest_potassium'] = None
                 plant_dict['latest_temp'] = None
                 plant_dict['latest_moist'] = None
             plant_dict['name'] = plant.name
@@ -58,7 +62,9 @@ def reg_index(request, plant_id=0):
                                                   plant_data]
             detail_data[data_key]['m_temp'] = [plant_data_item.m_temp for plant_data_item in plant_data]
             detail_data[data_key]['m_ec'] = [plant_data_item.m_ec for plant_data_item in plant_data]
-            detail_data[data_key]['m_npk'] = [plant_data_item.m_npk for plant_data_item in plant_data]
+            detail_data[data_key]['m_nitrogen'] = [plant_data_item.m_nitrogen for plant_data_item in plant_data]
+            detail_data[data_key]['m_phosphorus'] = [plant_data_item.m_phosphorus for plant_data_item in plant_data]
+            detail_data[data_key]['m_potassium'] = [plant_data_item.m_potassium for plant_data_item in plant_data]
             detail_data[data_key]['m_ph'] = [plant_data_item.m_ph for plant_data_item in plant_data]
         plant_ids = [plant.id for plant in plants]
 
@@ -108,13 +114,16 @@ def add_plant(request):
         return redirect('reg_index')
 
 
-def update_plant(request, plant_id):
+def update_plant_c(request, plant_id):
     print('UPDATING PLANT')
     if request.method == "POST":
+        print(request.POST, 'BBBBBBBBBBBBBH')
         plant = Plant.objects.get(pk=plant_id)
         plant.ec = request.POST['ec']
         plant.ph = request.POST['ph']
-        plant.npk = request.POST['npk']
+        plant.nitrogen = request.POST['nitrogen']
+        plant.phosphorus = request.POST['phosphorus']
+        plant.potassium = request.POST['potassium']
         plant.temperature = request.POST['temperature']
         plant.ideal_moisture = request.POST['ideal_moisture']
         plant.fertilizer = request.POST['fertilizer']
@@ -124,3 +133,13 @@ def update_plant(request, plant_id):
         return redirect('reg_index')
 
     return JsonResponse({'status': 'error'})
+
+
+def delete_plant(request, plant_id):
+    plant = get_object_or_404(Plant, id=plant_id)
+    if request.user != plant.user:
+        return redirect('reg_index')
+
+    plant.delete()
+    messages.success(request, 'Plant Deleted!!!')
+    return redirect('reg_index')
