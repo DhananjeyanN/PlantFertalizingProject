@@ -78,6 +78,9 @@ class DataTable(models.Model):
     m_potassium = models.FloatField(null=True, blank=True)
     m_ph = models.FloatField(null=True, blank=True)
     date_time = models.DateTimeField(auto_now_add=True)
+#{'plant_id': 14, 'uuid': '704f03eb-64d1-41cc-b2fa-96fd981149d4', 'm_temp': 'None',
+    # 'm_moist': '33.000000', 'm_ec': 'None', 'm_nitrogen': 'None', 'm_phosphorus': 'None',
+    # 'm_potassium': 'None', 'm_ph': 'None', 'date_time': '2023-10-31 21:29:29'}
 
     def __str__(self):
         return f'data recorded at Date {self.date_time} EC {self.m_ec} Nitrogen {self.m_nitrogen} Phosphorus {self.m_phosphorus} Potassium {self.m_potassium} PH {self.m_ph} MOIST {self.m_moist}'

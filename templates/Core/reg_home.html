@@ -3,10 +3,10 @@
 {% block content %}
 <body>
 <div class="container mt-5">
-<!--    container mt-5 boostrap classes for styling-->
+    <!--    container mt-5 boostrap classes for styling-->
     <h1 class="text-center mb-5"> Plant Home </h1> #displays heading
     <div class="row">
-<!-- div is used to contain parts of content of webpage  -->
+        <!-- div is used to contain parts of content of webpage  -->
         {% if data %}
         {% for plant in plants %}
         <div class="col-12 mt-3">
@@ -32,19 +32,25 @@
                         </div>
                     </div>
                     <!-- More Info Button Positioned to the Bottom Right -->
-                    <div class="d-flex justify-content-end mt-3">
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addSensorModal{{plant.id}}">Add Sensor
+                            <!--            data-bs-toggle targets id given to render                -->
+                        </button>
                         <!-- Use d-flex and justify-content-end to push button to the right -->
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal{{plant.id}}">More Info
-<!--            data-bs-toggle targets id given to render                -->
+                            <!--            data-bs-toggle targets id given to render                -->
                         </button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Modal Dialog for Each Plant -->
-        <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<!-- tabindex = -1 prevents this div from being displayed -->
+        <div class="modal fade" id="exampleModal{{plant.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <!-- tabindex = -1 prevents this div from being displayed -->
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -75,7 +81,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="phosphorus{{plant.id}}">Phosphorus:</label>
-                                    <input type="text" class="form-control" name="phosphorus" id="phosphorus{{plant.id}}"
+                                    <input type="text" class="form-control" name="phosphorus"
+                                           id="phosphorus{{plant.id}}"
                                            value="{{plant.phosphorus}}">
                                 </div>
                                 <div class="form-group">
@@ -99,105 +106,59 @@
                                            id="fertilizer{{plant.id}}" value="{{plant.fertilizer}}">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary" id="saveButton{{plant.id}}">Save</button>
-                                    <button class="btn btn-primary" data-toggle="modal" data-target="#confirm_delete{{plant.id}}">Del Plant</button>
-                                </div>
-                                <div class="modal" id="confirm_delete{{plant.id}}">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Confirm Delete!!!</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <!-- Modal body -->
-                <div class="modal-body"><p>Are You Sure???</p></div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary"><a href="{% url 'delete_plant' plant.id %}">Delete</a></button>
-                    </form>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+                                    <button type="submit" class="btn btn-primary" id="saveButton{{plant.id}}">Save
+                                    </button>
+                                    <button class="btn btn-primary" data-toggle="modal"
+                                            data-target="#confirmDelete{{plant.id}}" type="button">Del Plant
+                                    </button>
+                                    <div class="modal fade" id="confirmDelete{{plant.id}}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Confirm Delete!!!</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;
+                                                    </button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body"><p>Are You Sure???</p></div>
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="submit" style="padding:0;" class="btn btn-primary"><a
+                                                            class="btn btn-primary"
+                                                            style="text-decoration:none; color:white;"
+                                                            href="{% url 'delete_plant' plant.id %}">Delete</a></button>
                             </form>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="chart-container">
-                                    <canvas id="detailChartTemp{{plant.id}}"></canvas>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="chart-container">
-                                    <canvas id="detailChartEC{{plant.id}}"></canvas>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="chart-container">
-                                    <canvas id="detailChartNitrogen{{plant.id}}"></canvas>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="chart-container">
-                                    <canvas id="detailChartPhosphorus{{plant.id}}"></canvas>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="chart-container">
-                                    <canvas id="detailChartPotassium{{plant.id}}"></canvas>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="chart-container">
-                                    <canvas id="detailChartPH{{plant.id}}"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
-        {% endif %}
-
-        <div class="d-flex justify-content-center mt-4">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#AddPlantModal{{plant.id}}" style="margin-top:10px; padding:10px;">Add Plant
-        </button>
-        </div>
-                <div class="modal fade" id="AddPlantModal{{plant.id}}" tabindex="-1" aria-labelledby="AddPlantModalLabel" aria-hidden="true">
-<!-- tabindex = -1 prevents this div from being displayed -->
+        <div class="modal fade" id="addSensorModal{{plant.id}}" tabindex="1" aria-labelledby="addSensorModalLabel"
+             aria-hidden="true">
+            <!-- tabindex = -1 prevents this div from being displayed -->
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="AddPlantModalLabel">Add Plant</h5>
+                        <h5 class="modal-title" id="exampleModal">{{plant.name}}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="plant-info">
-                            <form action = '{% url "add_plant" %}'  method="post" enctype="multipart/form-data">
+                            <div class="plant-img">
+                                <img src="{{ plant.photo.url }}">
+                            </div>
+                            <form action="{% url 'update_plant_c' plant.id %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <label for="name">Name:</label>
-                                    <input type="text" class="form-control" name="plant_name" id="name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="photo">Picture:</label>
-                                    <input type="file" class="form-control" name="plant_pic" id="photo">
-                                </div>
-                                <div class="form-group">
-                                    <label for="ec">EC:</label>
-                                    <input type="text" class="form-control" name="ec" id="ec"
+                                    <label for="ec{{plant.id}}">EC:</label>
+                                    <input type="text" class="form-control" name="ec" id="ec{{plant.id}}"
                                            value="{{plant.ec}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="ph{{plant.id}}">PH:</label>
-                                    <input type="text" class="form-control" name="ph" id="ph"
+                                    <input type="text" class="form-control" name="ph" id="ph{{plant.id}}"
                                            value="{{plant.ph}}">
                                 </div>
                                 <div class="form-group">
@@ -207,7 +168,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="phosphorus{{plant.id}}">Phosphorus:</label>
-                                    <input type="text" class="form-control" name="phosphorus" id="phosphorus{{plant.id}}"
+                                    <input type="text" class="form-control" name="phosphorus"
+                                           id="phosphorus{{plant.id}}"
                                            value="{{plant.phosphorus}}">
                                 </div>
                                 <div class="form-group">
@@ -218,39 +180,178 @@
                                 <div class="form-group">
                                     <label for="temperature{{plant.id}}">Temperature:</label>
                                     <input type="text" class="form-control" name="temperature"
-                                           id="temperature" value="{{plant.temperature}}">
+                                           id="temperature{{plant.id}}" value="{{plant.temperature}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="ideal_moisture{{plant.id}}">Moisture:</label>
                                     <input type="text" class="form-control" name="ideal_moisture"
-                                           id="ideal_moisture" value="{{plant.ideal_moisture}}">
+                                           id="ideal_moisture{{plant.id}}" value="{{plant.ideal_moisture}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="fertilizer{{plant.id}}">Fertilizer:</label>
                                     <input type="text" class="form-control" name="fertilizer"
-                                           id="fertilizer" value="{{plant.fertilizer}}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="plant_coefficient">Plant Coefficient:</label>
-                                    <input type="text" class="form-control" name="plant_coefficient"
-                                           id="plant_coefficient" value="{{plant.plant_coefficient}}">
+                                           id="fertilizer{{plant.id}}" value="{{plant.fertilizer}}">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary" id="saveButton">Save
+                                    <button type="submit" class="btn btn-primary" id="saveButton{{plant.id}}">Save
                                     </button>
-                                </div>
+                                    <button class="btn btn-primary" data-toggle="modal"
+                                            data-target="#confirmDelete{{plant.id}}" type="button">Del Plant
+                                    </button>
+                                    <div class="modal fade" id="confirmDelete{{plant.id}}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Confirm Delete!!!</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;
+                                                    </button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body"><p>Are You Sure???</p></div>
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="submit" style="padding:0;" class="btn btn-primary"><a
+                                                            class="btn btn-primary"
+                                                            style="text-decoration:none; color:white;"
+                                                            href="{% url 'delete_plant' plant.id %}">Delete</a></button>
                             </form>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartTemp{{plant.id}}"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartEC{{plant.id}}"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartNitrogen{{plant.id}}"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartPhosphorus{{plant.id}}"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartPotassium{{plant.id}}"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-container">
+                <canvas id="detailChartPH{{plant.id}}"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="d-flex justify-content-center mt-4">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#AddPlantModal{{plant.id}}" style="margin-top:10px; padding:10px;">Add Plant
+    </button>
+</div>
+<div class="modal fade" id="AddPlantModal{{plant.id}}" tabindex="-1" aria-labelledby="AddPlantModalLabel"
+     aria-hidden="true">
+    <!-- tabindex = -1 prevents this div from being displayed -->
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddPlantModalLabel">Add Plant</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="plant-info">
+                    <form action='{% url "add_plant" %}' method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" class="form-control" name="plant_name" id="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="photo">Picture:</label>
+                            <input type="file" required class="form-control" name="plant_pic" id="photo">
+                        </div>
+                        <div class="form-group">
+                            <label for="ec">EC:</label>
+                            <input type="text" class="form-control" name="ec" id="ec"
+                                   value="{{plant.ec}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="ph{{plant.id}}">PH:</label>
+                            <input type="text" class="form-control" name="ph" id="ph"
+                                   value="{{plant.ph}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="nitrogen{{plant.id}}">Nitrogen:</label>
+                            <input type="text" class="form-control" name="nitrogen" id="nitrogen{{plant.id}}"
+                                   value="{{plant.nitrogen}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="phosphorus{{plant.id}}">Phosphorus:</label>
+                            <input type="text" class="form-control" name="phosphorus" id="phosphorus{{plant.id}}"
+                                   value="{{plant.phosphorus}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="potassium{{plant.id}}">Potassium:</label>
+                            <input type="text" class="form-control" name="potassium" id="potassium{{plant.id}}"
+                                   value="{{plant.potassium}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="temperature{{plant.id}}">Temperature:</label>
+                            <input type="text" class="form-control" name="temperature"
+                                   id="temperature" value="{{plant.temperature}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="ideal_moisture{{plant.id}}">Moisture:</label>
+                            <input type="text" class="form-control" name="ideal_moisture"
+                                   id="ideal_moisture" value="{{plant.ideal_moisture}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="fertilizer{{plant.id}}">Fertilizer:</label>
+                            <input type="text" class="form-control" name="fertilizer"
+                                   id="fertilizer" value="{{plant.fertilizer}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="plant_coefficient">Plant Coefficient:</label>
+                            <input type="text" class="form-control" name="plant_coefficient"
+                                   id="plant_coefficient" value="{{plant.plant_coefficient}}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="saveButton">Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
 
 </div>
 <script>
@@ -327,5 +428,6 @@
               drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);
           });
       {% endfor %}
+
 </script>
 {% endblock %}

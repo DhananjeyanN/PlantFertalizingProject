@@ -83,33 +83,62 @@ def update_data_table_entry(request, entry_id):
         return Response({'message': 'GET request received'}, status=200)
 
     try:
+        print('UPDATE DATATABLE')
         data_entry = get_object_or_404(DataTable, uuid=entry_id)
+        plant_id = request.data['plant_id']
+        plant_obj = get_object_or_404(Plant, id=plant_id)
+        data = request.data
+        data['plant'] = plant_obj.id
+        data.pop('plant_id')
         print(data_entry, 'beannnnnns')
         print(data_entry.__dict__)
-        data = request.data
-        data['m_temp'] = float(data['m_temp'])
-        data['m_moist'] = float(data['m_moist'])
-        data['m_ec'] = float(data['m_ec'])
-        data['m_ph'] = float(data['m_ph'])
-        data['m_nitrogen'] = float(data['m_nitrogen'])
-        data['m_phosphorus'] = float(data['m_phosphorus'])
-        data['m_potassium'] = float(data['m_potassium'])
-        data['plant'] = data_entry.plant.id
+        print(data, 'THE DATA')
+        if data['m_temp'] != 'None':
+            data['m_temp'] = float(data.get('m_temp', None))
+        else:
+            data['m_temp'] = None
+        if data['m_moist'] != 'None':
+            data['m_moist'] = float(data.get('m_moist', None))
+        else:
+            data['m_moist'] = None
+        if data['m_ec'] != 'None':
+            data['m_ec'] = float(data.get('m_m_ec', None))
+        else:
+            data['m_ec'] = None
+        if data['m_nitrogen'] != 'None':
+            data['m_nitrogen'] = float(data.get('m_nitrogen', None))
+        else:
+            data['m_nitrogen'] = None
+        if data['m_phosphorus'] != 'None':
+            data['m_phosphorus'] = float(data.get('m_phosphorus', None))
+        else:
+            data['m_phosphorus'] = None
+        if data['m_potassium'] != 'None':
+            data['m_potassium'] = float(data.get('m_potassium', None))
+        else:
+            data['m_potassium'] = None
+        if data['m_ph'] != 'None':
+            data['m_ph'] = float(data.get('m_ph', None))
+        else:
+            data['m_ph'] = None
+        data['date_time'] = datetime.strptime(data['date_time'], '%Y-%m-%d %H:%M:%S')
         print(data, 'daaaaaata')
 
         # {'plant_id': 2, 'uuid': 'cc09a0a8-c161-4115-8640-fe8e68e5e73a', 'm_temp': 1.0, 'm_moist': 2.0, 'm_ec': 1.0, 'm_npk': 2.0, 'm_ph': 1.0, 'date_time': datetime.datetime(2023, 10, 3, 4, 2, 15, 197382, tzinfo=datetime.timezone.utc)}
         # {'plant_id': 2, 'uuid': 'cc09a0a8-c161-4115-8640-fe8e68e5e73a', 'm_temp': '999.000000', 'm_moist': '888.000000', 'm_ec': '333.000000', 'm_npk': '123.000000', 'm_ph': '11.000000', 'date_time': '2023-09-30 20:49:03'}
 
-    except DataTable.DoesNotExist:
-        return Response({'Error': 'Data entry not found In Update Plant!!!'}, status=404)
 
-    if request.method == 'POST' or request.method == 'PUT':
-        serializer = DataTableSerializer(data_entry, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
-        else:
-            return Response(serializer.errors, status=400)
+        if request.method == 'POST' or request.method == 'PUT':
+            serializer = DataTableSerializer(data_entry, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            else:
+                print(serializer.errors, 'ERRRROR')
+                return Response(serializer.errors, status=400)
+    except Exception as error:
+        print(error, 'THIS IS AN ERROR')
+        return Response({'Error': 'Data entry not found In Update Plant!!!'}, status=404)
 
 
 @csrf_exempt
@@ -127,19 +156,53 @@ def read_data_table_entry(request, entry_id):
 @csrf_exempt
 @api_view(['POST'])
 def create_data_table_entry(request):
+    print(request.data, 'HELLOB')
     if request.method == 'POST':
         plant_id = request.data['plant_id']
         plant_obj = get_object_or_404(Plant, id = plant_id)
         data = request.data
-        print(request.data)
+        print(request.data, 'ADDING', plant_obj.id)
         data['plant'] = plant_obj.id
         data.pop('plant_id')
-        serializer = DataTableSerializer(data=request.data)
+        print(request.data, 'ADDING', plant_obj.id)
+        print(type(data['m_temp']), 'MTEMPGG')
+        if data['m_temp'] != 'None':
+            data['m_temp'] = float(data.get('m_temp',None))
+        else:
+            data['m_temp'] = None
+        if data['m_moist'] != 'None':
+            data['m_moist'] = float(data.get('m_moist',None))
+        else:
+            data['m_moist'] = None
+        if data['m_ec'] != 'None':
+            data['m_ec'] = float(data.get('m_m_ec',None))
+        else:
+            data['m_ec'] = None
+        if data['m_nitrogen'] != 'None':
+            data['m_nitrogen'] = float(data.get('m_nitrogen',None))
+        else:
+            data['m_nitrogen'] = None
+        if data['m_phosphorus'] != 'None':
+            data['m_phosphorus'] = float(data.get('m_phosphorus',None))
+        else:
+            data['m_phosphorus'] = None
+        if data['m_potassium'] != 'None':
+            data['m_potassium'] = float(data.get('m_potassium',None))
+        else:
+            data['m_potassium'] = None
+        if data['m_ph'] != 'None':
+            data['m_ph'] = float(data.get('m_ph',None))
+        else:
+            data['m_ph'] = None
+        data['date_time'] = datetime.strptime(data['date_time'], '%Y-%m-%d %H:%M:%S')
+
+        serializer = DataTableSerializer(data=data)
         if serializer.is_valid():
             print(serializer)
             serializer.save()
             return Response(serializer.data, status=201) #201 means created succefully
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=400) # 400 means some error but found
 
 
