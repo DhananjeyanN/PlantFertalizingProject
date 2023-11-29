@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from Core.forms import AddPlantForm, EditPlantForm
-from Core.models import Plant, DataTable
+from Core.models import Plant, DataTable, Sensor
 from accounts.models import SiteProfile
 import json
 
@@ -139,7 +139,16 @@ def delete_plant(request, plant_id):
     plant = get_object_or_404(Plant, id=plant_id)
     if request.user != plant.user:
         return redirect('reg_index')
-
     plant.delete()
     messages.success(request, 'Plant Deleted!!!')
+    return redirect('reg_index')
+
+def add_sensor(request, plant_id):
+    plant = get_object_or_404(Plant, id=plant_id)
+    if request.method == 'POST':
+        sensor_pin = request.POST.get('sensor_pin')
+        sensor_type = request.POST.get('sensor_type')
+    sensor = Sensor(plant=plant, sensor_pin=sensor_pin, sensor_type=sensor_type)
+    sensor.save()
+    messages.success(request, 'Sensor Saved!!!!!!!!')
     return redirect('reg_index')

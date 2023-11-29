@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from Core.models import Plant, DataTable
+from Core.models import Plant, DataTable, Sensor
+
 
 # Register your models here.
 class DataTableAdmin(admin.ModelAdmin):
@@ -16,7 +17,12 @@ class PlantAdmin(admin.ModelAdmin):
     list_filter = ( 'name', 'photo', 'ec', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'temperature', 'ideal_moisture', 'fertilizer','plant_coefficient')
     search_fields = ( 'name', 'photo', 'ec', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'temperature', 'ideal_moisture', 'fertilizer','plant_coefficient')
 
+class SensorAdmin(admin.ModelAdmin):
+    list_display = ('plant', 'sensor_pin', 'sensor_type')
+    list_display_links = ('sensor_pin',)
+
 admin.site.register(Plant, PlantAdmin)
 admin.site.register(DataTable, DataTableAdmin)
+admin.site.register(Sensor, SensorAdmin)
 
 

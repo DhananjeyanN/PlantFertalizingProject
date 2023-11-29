@@ -86,6 +86,11 @@ class DataTable(models.Model):
         return f'data recorded at Date {self.date_time} EC {self.m_ec} Nitrogen {self.m_nitrogen} Phosphorus {self.m_phosphorus} Potassium {self.m_potassium} PH {self.m_ph} MOIST {self.m_moist}'
 
 
+class Sensor(models.Model):
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='sensor')
+    sensor_pin = models.IntegerField()
+    sensor_type = models.IntegerField()
 
-
+    def __str__(self):
+        return f'Plant: {self.plant} Pin: {self.sensor_pin} Type: {self.sensor_type}'
 
