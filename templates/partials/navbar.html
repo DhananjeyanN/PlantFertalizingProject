@@ -27,6 +27,12 @@
                             <input type="hidden">
                         </form>
                     </li>
+                    {% if 'reg_index' in request.path %}
+                    <li class="nav-item text-align-right">
+                        <a class="nav-link" href="#">Add NPK Sensor</a>
+
+                    </li>
+                    {% endif %}
 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'index' %}">Home</a>

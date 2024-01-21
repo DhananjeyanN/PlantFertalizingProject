@@ -7,8 +7,8 @@ from rest_framework import generics
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .serializers import PlantSerializer, DataTableSerializer
-from Core.models import Plant, DataTable
+from .serializers import PlantSerializer, DataTableSerializer, SensorSerializer
+from Core.models import Plant, DataTable, Sensor
 from Core.models import Plant
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -49,7 +49,16 @@ def get_all_plants(request):
         serializer = PlantSerializer(plants, many=True)
         return JsonResponse(serializer.data, safe=False)
     except Plant.DoesNotExist:
-        return Response({'Error': 'Plant Not Found!!!'}, status=404)
+        return Response({'Error': 'Plant Not Found!!!'}, status=404)\
+
+@api_view(['GET'])
+def get_sensors(request):
+    try:
+        sensors = Sensor.objects.filter(user=request.user)
+        serializer = SensorSerializer(sensors, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    except Sensor.DoesNotExist:
+        return Response({'Error': 'Sensors Not Found!!!'}, status=404)
 
 
 @csrf_exempt
@@ -175,7 +184,7 @@ def create_data_table_entry(request):
         else:
             data['m_moist'] = None
         if data['m_ec'] != 'None':
-            data['m_ec'] = float(data.get('m_m_ec',None))
+            data['m_ec'] = float(data.get('m_ec',None))
         else:
             data['m_ec'] = None
         if data['m_nitrogen'] != 'None':
@@ -197,8 +206,9 @@ def create_data_table_entry(request):
         data['date_time'] = datetime.strptime(data['date_time'], '%Y-%m-%d %H:%M:%S')
 
         serializer = DataTableSerializer(data=data)
+        print(data, 'DAAAA')
         if serializer.is_valid():
-            print(serializer)
+            print(serializer, 'seriLIZER')
             serializer.save()
             return Response(serializer.data, status=201) #201 means created succefully
         else:

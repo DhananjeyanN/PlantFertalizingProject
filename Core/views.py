@@ -143,12 +143,16 @@ def delete_plant(request, plant_id):
     messages.success(request, 'Plant Deleted!!!')
     return redirect('reg_index')
 
-def add_sensor(request, plant_id):
-    plant = get_object_or_404(Plant, id=plant_id)
+def add_sensor(request, plant_id = None):
     if request.method == 'POST':
+        sensor_user = request.user
         sensor_pin = request.POST.get('sensor_pin')
         sensor_type = request.POST.get('sensor_type')
-    sensor = Sensor(plant=plant, sensor_pin=sensor_pin, sensor_type=sensor_type)
-    sensor.save()
-    messages.success(request, 'Sensor Saved!!!!!!!!')
-    return redirect('reg_index')
+    if plant_id is not None:
+        plant = get_object_or_404(Plant, id=plant_id)
+        sensor = Sensor(user=sensor_user, plant=plant, sensor_pin=sensor_pin, sensor_type=sensor_type)
+        sensor.save()
+        messages.success(request, 'Sensor Saved!!!!!!!!')
+        return redirect('reg_index')
+    else:
+        pass

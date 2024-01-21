@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Core.models import Plant, DataTable
+from Core.models import Plant, DataTable, Sensor
 
 
 class PlantSerializer(serializers.ModelSerializer):
@@ -9,10 +9,15 @@ class PlantSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SensorSerializer(serializers.ModelSerializer):
+    # user = serializers.ReadOnlyField(source='user.username')
+    class Meta:
+        model = Sensor
+        fields = '__all__'
+
+
 class DataTableSerializer(serializers.ModelSerializer):
     # user = serializers.ReadOnlyField(source='user.username')
     class Meta:
         model = DataTable
         fields = '__all__'
-
-

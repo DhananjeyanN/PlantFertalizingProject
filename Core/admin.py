@@ -18,7 +18,7 @@ class PlantAdmin(admin.ModelAdmin):
     search_fields = ( 'name', 'photo', 'ec', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'temperature', 'ideal_moisture', 'fertilizer','plant_coefficient')
 
 class SensorAdmin(admin.ModelAdmin):
-    list_display = ('plant', 'sensor_pin', 'sensor_type')
+    list_display = ('user','plant', 'sensor_pin', 'sensor_type')
     list_display_links = ('sensor_pin',)
 
 admin.site.register(Plant, PlantAdmin)
