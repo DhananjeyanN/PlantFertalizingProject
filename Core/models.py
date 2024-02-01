@@ -91,10 +91,9 @@ class Sensor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sensor_user')
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='sensor')
     sensor_pin = models.IntegerField()
-    sensor_type = models.IntegerField()
 
     def __str__(self):
-        return f'Plant: {self.plant} Pin: {self.sensor_pin} Type: {self.sensor_type}'
+        return f'Plant: {self.plant} Pin: {self.sensor_pin}'
 
 
 class NPKSensor(models.Model):

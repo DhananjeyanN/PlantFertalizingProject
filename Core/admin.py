@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from Core.models import Plant, DataTable, Sensor
+from Core.models import Plant, DataTable, Sensor, NPKSensor
 
 
 # Register your models here.
@@ -18,11 +18,16 @@ class PlantAdmin(admin.ModelAdmin):
     search_fields = ( 'name', 'photo', 'ec', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'temperature', 'ideal_moisture', 'fertilizer','plant_coefficient')
 
 class SensorAdmin(admin.ModelAdmin):
-    list_display = ('user','plant', 'sensor_pin', 'sensor_type')
+    list_display = ('user','plant', 'sensor_pin')
+    list_display_links = ('sensor_pin',)
+
+class NPKSensorAdmin(admin.ModelAdmin):
+    list_display = ('user','sensor_pin', 'current_plant')
     list_display_links = ('sensor_pin',)
 
 admin.site.register(Plant, PlantAdmin)
 admin.site.register(DataTable, DataTableAdmin)
 admin.site.register(Sensor, SensorAdmin)
+admin.site.register(NPKSensor, NPKSensorAdmin)
 
 

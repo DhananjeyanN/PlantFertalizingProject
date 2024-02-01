@@ -7,8 +7,8 @@ from rest_framework import generics
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .serializers import PlantSerializer, DataTableSerializer, SensorSerializer
-from Core.models import Plant, DataTable, Sensor
+from .serializers import PlantSerializer, DataTableSerializer, SensorSerializer, NPKSensorSerializer
+from Core.models import Plant, DataTable, Sensor, NPKSensor
 from Core.models import Plant
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -59,6 +59,15 @@ def get_sensors(request):
         return JsonResponse(serializer.data, safe=False)
     except Sensor.DoesNotExist:
         return Response({'Error': 'Sensors Not Found!!!'}, status=404)
+
+@api_view(['GET'])
+def get_npk_sensor(request):
+    try:
+        npk_sensor = NPKSensor.objects.filter(user=request.user)
+        serializer = NPKSensorSerializer(npk_sensor, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    except Sensor.DoesNotExist:
+        return Response({'Error': 'NPK Sensor Not Found!!!'}, status=404)
 
 
 @csrf_exempt

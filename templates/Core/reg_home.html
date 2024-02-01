@@ -230,7 +230,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="plant-info">
-                            <form action="{% url 'add_sensor' %}" method="post">
+                            <form action="{% url 'add_sensor' 1 %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="sensor_pin">Sensor Pin:</label>
