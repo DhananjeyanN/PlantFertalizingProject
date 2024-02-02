@@ -16,6 +16,7 @@ markdown-it-py==3.0.0
 mdurl==0.1.2
 multidict==6.0.4
 oauthlib==3.2.2
+Pillow==10.0.0
 pycparser==2.21
 Pygments==2.16.1
 PyJWT==2.8.0
@@ -29,5 +30,4 @@ rich==13.5.2
 social-auth-app-django==5.2.0
 social-auth-core==4.4.2
 sqlparse==0.4.4
-typing_extensions==4.7.1
 urllib3==2.0.4
