@@ -109,7 +109,9 @@ def add_plant(request):
         ideal_moist = request.POST.get('ideal_moisture')
         fertilizer = request.POST.get('fertilizer')
         plant_coefficient = request.POST.get('plant_coefficient')
-        plant = Plant(user=request.user, name=name, photo=pic, ec=ec, ph=ph, nitrogen=nitrogen, potassium=potassium, phosphorus=phosphorus, temperature=temp, ideal_moisture = ideal_moist, fertilizer=fertilizer, plant_coefficient=plant_coefficient)
+        plant = Plant(user=request.user, name=name, photo=pic, ec=ec, ph=ph, nitrogen=nitrogen, potassium=potassium,
+                      phosphorus=phosphorus, temperature=temp, ideal_moisture=ideal_moist, fertilizer=fertilizer,
+                      plant_coefficient=plant_coefficient)
         plant.save()
         return redirect('reg_index')
 
@@ -143,14 +145,15 @@ def delete_plant(request, plant_id):
     messages.success(request, 'Plant Deleted!!!')
     return redirect('reg_index')
 
-def add_sensor(request, plant_id = None):
+
+def add_sensor(request, plant_id=None):
     if request.method == 'POST':
         sensor_user = request.user
         sensor_pin = request.POST.get('sensor_pin')
         sensor_type = request.POST.get('sensor_type')
     if plant_id is not None:
         plant = get_object_or_404(Plant, id=plant_id)
-        sensor = Sensor(user=sensor_user, plant=plant, sensor_pin=sensor_pin, sensor_type=sensor_type)
+        sensor = Sensor(user=sensor_user, plant=plant, sensor_pin=sensor_pin)
         sensor.save()
         messages.success(request, 'Sensor Saved!!!!!!!!')
         return redirect('reg_index')
