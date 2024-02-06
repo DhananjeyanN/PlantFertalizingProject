@@ -358,6 +358,7 @@
       return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
       }
       function drawChart(canvasId, plantName, label, data_x,dataset) {
+          console.log(plantName, data_x, dataset);
           var lastTimeStamp = data_x[data_x.length - 1];
           var dayOfLastEntry = getDay(lastTimeStamp);
           var ctx = document.getElementById(canvasId).getContext('2d');
@@ -378,9 +379,12 @@
               },
               options: {
                   responsive: true,
-                  maintainAspectRatio: false,
+                  maintainAspectRatio: true,
                   scales: {
                       y: {
+                          beginAtZero: true
+                      },
+                      x:{
                           beginAtZero: true
                       }
                   }
