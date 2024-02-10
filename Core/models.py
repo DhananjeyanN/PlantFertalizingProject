@@ -77,7 +77,7 @@ class DataTable(models.Model):
     m_phosphorus = models.FloatField(null=True, blank=True)
     m_potassium = models.FloatField(null=True, blank=True)
     m_ph = models.FloatField(null=True, blank=True)
-    date_time = models.DateTimeField(auto_now_add=True)
+    date_time = models.DateTimeField()
 
     # {'plant_id': 14, 'uuid': '704f03eb-64d1-41cc-b2fa-96fd981149d4', 'm_temp': 'None',
     # 'm_moist': '33.000000', 'm_ec': 'None', 'm_nitrogen': 'None', 'm_phosphorus': 'None',

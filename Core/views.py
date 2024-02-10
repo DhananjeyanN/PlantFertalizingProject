@@ -54,8 +54,12 @@ def reg_index(request):
 
             data_key = plant.name.replace(" ", "_")
             data[data_key] = {}
-            data[data_key]['date_time'] = [plant_data_item.date_time.isoformat() for plant_data_item in plant_data]
-            data[data_key]['m_moist'] = [plant_data_item.m_moist for plant_data_item in plant_data]
+            for plant_data_item in plant_data:
+                if plant_data_item.m_moist is not None:
+                    data[data_key]['date_time'].append(plant_data_item.date_time.isoformat())
+                    data[data_key]['m_moist'].append(plant_data_item.m_moist)
+            # data[data_key]['date_time'] = [plant_data_item.date_time.isoformat() for plant_data_item in plant_data]
+            # data[data_key]['m_moist'] = [plant_data_item.m_moist for plant_data_item in plant_data]
             # For more detailed data
             detail_data[data_key] = {}
             detail_data[data_key]['date_time'] = [plant_data_item.date_time.isoformat() for plant_data_item in
@@ -67,10 +71,10 @@ def reg_index(request):
             detail_data[data_key]['m_potassium'] = [plant_data_item.m_potassium for plant_data_item in plant_data]
             detail_data[data_key]['m_ph'] = [plant_data_item.m_ph for plant_data_item in plant_data]
         plant_ids = [plant.id for plant in plants]
-
+        print(data, "DATA")
         plant_temperatures = [plant.temperature for plant in plants]
         context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile,
-                   'data': json.dumps(data), 'latest_data': latest_data, 'detail_data': json.dumps(detail_data),
+                   'data': json.dumps(data), 'latest_data': json.dumps(latest_data), 'detail_data': json.dumps(detail_data),
                    "ids": json.dumps(plant_ids),
                    }
     else:
