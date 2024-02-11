@@ -347,6 +347,7 @@
       remaining_hours += 1;
        remaining_minutes = 0;}
       var formattedTime = '-' + remaining_hours + ':' + remaining_minutes;
+      console.log(formattedTime)
       return formattedTime;
       }
       // Converts a timestamp to day
@@ -383,7 +384,23 @@
                   scales: {
                       y: {
                           beginAtZero: true
-                      }
+                      },
+<!--                      x:{-->
+<!--                         type:"linear",-->
+<!--                         ticks:{-->
+<!--                         callback:function(value, index, values){-->
+<!--                         if (index == 0) return "-24";-->
+<!--                         if (index === values.length - 1) return "0";-->
+<!--                         return "";-->
+<!--                         },-->
+<!--                         stepSize: 1,-->
+<!--                         autoskip: false,-->
+<!--                         },-->
+<!--                         title: {-->
+<!--                         display: true,-->
+<!--                         text: "hours ago"-->
+<!--                         }-->
+<!--                      }-->
                   }
               }
           });

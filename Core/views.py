@@ -53,7 +53,8 @@ def reg_index(request):
             latest_data.append(plant_dict)
 
             data_key = plant.name.replace(" ", "_")
-            data[data_key] = {}
+            data[data_key] = {'date_time':[], 'm_moist':[]}
+
             for plant_data_item in plant_data:
                 if plant_data_item.m_moist is not None:
                     data[data_key]['date_time'].append(plant_data_item.date_time.isoformat())
