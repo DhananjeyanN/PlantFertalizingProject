@@ -6,7 +6,11 @@ from Core.forms import AddPlantForm, EditPlantForm
 from Core.models import Plant, DataTable, Sensor
 from accounts.models import SiteProfile
 import json
-
+import json
+import plotly.graph_objs as go
+import plotly
+from django.utils import timezone
+import pytz
 
 # Create your views here.
 def index(request):
@@ -27,13 +31,36 @@ def reg_index(request):
         data = {}
         detail_data = {}
         last_24_hours_ago = datetime.now() - timedelta(hours=1000)
+        #for creating interactive plot
+        plots = []  # To store Plotly plot JSON for each plant
+        local_tz = pytz.timezone('America/Los_Angeles')
+        for plant in plants:
+            # Assuming you have date_time and m_moist or similar data for plotting
+            plant_data = DataTable.objects.filter(plant=plant, date_time__gte=last_24_hours_ago)
+            if plant_data.exists():
+                # Preparing data for Plotly
+                dates = [data.date_time.astimezone(local_tz) for data in plant_data]
+                values = [data.m_moist for data in plant_data]
+
+                # Creating Plotly figure
+                fig = go.Figure(data=[go.Scatter(x=dates, y=values, mode='lines+markers', name=plant.name)]) # accepting a list of dates and values to create chart
+                fig.update_layout(title=f"{plant.name} Moisture Over Time", xaxis_title="Date Time",
+                                  yaxis_title="Moisture")
+
+                # Convert plot to JSON
+                plot_json = plotly.io.to_json(fig) #converts plot into json format
+                plots.append(plot_json) #appends each chart for every plant into the list off plots
+                print(plot_json, 'Chart')
         latest_data = []
+        detailed_data_plots = []
         for plant in plants:
             plant_dict = {}
             plant_data = DataTable.objects.filter(plant=plant, date_time__gte=last_24_hours_ago)
             ec_exists = DataTable.objects.filter(plant=plant).exclude(m_ec__isnull=True).exists()
+            print()
             if ec_exists:
                 latest_ec_data = DataTable.objects.filter(plant=plant).exclude(m_ec__isnull=True).latest('date_time')
+                print(latest_ec_data, 'Latest EC Data')
                 plant_dict['latest_ec'] = latest_ec_data.m_ec
                 plant_dict['latest_ph'] = latest_ec_data.m_ph
                 plant_dict['latest_nitrogen'] = latest_ec_data.m_nitrogen
@@ -63,23 +90,43 @@ def reg_index(request):
             # data[data_key]['m_moist'] = [plant_data_item.m_moist for plant_data_item in plant_data]
             # For more detailed data
             detail_data[data_key] = {}
-            detail_data[data_key]['date_time'] = [plant_data_item.date_time.isoformat() for plant_data_item in
-                                                  plant_data]
+            detail_data[data_key]['date_time'] = [plant_data_item.date_time.astimezone(local_tz).isoformat() for plant_data_item in plant_data]
             detail_data[data_key]['m_temp'] = [plant_data_item.m_temp for plant_data_item in plant_data]
             detail_data[data_key]['m_ec'] = [plant_data_item.m_ec for plant_data_item in plant_data]
             detail_data[data_key]['m_nitrogen'] = [plant_data_item.m_nitrogen for plant_data_item in plant_data]
             detail_data[data_key]['m_phosphorus'] = [plant_data_item.m_phosphorus for plant_data_item in plant_data]
             detail_data[data_key]['m_potassium'] = [plant_data_item.m_potassium for plant_data_item in plant_data]
             detail_data[data_key]['m_ph'] = [plant_data_item.m_ph for plant_data_item in plant_data]
+            detail_plots = []
+#             '('potato', {'date_time': ['2024-02-11T04:51:25+00:00', '2024-02-11T04:51:34+00:00', '2024-02-11T04:52:00+00:00', '2024-02-11T04:52:08+00:00', '2024-02-15T03:48:04+00:00'], 'm_temp': [None, None, None, None, 1.0], 'm_ec': [None, None, None, None, 3.0], 'm_nitrogen': [None, None, None, None, 4.0], 'm_phosphorus': [None, None, None, None, 5.0], 'm_potassium': [None, None, None, None, 6.0], 'm_ph': [None, None, None, None, 7.0]}) PLANT
+# '
+        for plant in detail_data.items():
+            plot_data = plant[1]
+            print(plant[0])
+            print(plot_data, 'PLOT DATA')
+            date_time = plot_data['date_time']
+            plot_data.pop('date_time')
+            print(date_time, 'TIMEE')
+            print(plot_data, 'PLOT DATAA')
+            for k, v in plot_data.items():
+                fig = go.Figure(data=[go.Scatter(x=date_time, y=v, mode='lines+markers', name=plant[0])]) # accepting a list of dates and values to create chart
+                fig.update_layout(title=k, xaxis_title="Date Time", yaxis_title=k)
+                plot_json = plotly.io.to_json(fig)  # converts plot into json format
+                print(plot_json, "PPLOT")
+                detail_plots.append(plot_json)  # appends each chart for every plant into the list off plots
+
+
         plant_ids = [plant.id for plant in plants]
         print(data, "DATA")
+        print(detail_data, "DDATA")
         plant_temperatures = [plant.temperature for plant in plants]
         context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile,
                    'data': json.dumps(data), 'latest_data': json.dumps(latest_data), 'detail_data': json.dumps(detail_data),
-                   "ids": json.dumps(plant_ids),
+                   "ids": json.dumps(plant_ids), 'detail_plots': detail_plots
                    }
     else:
         context = {'profile': profile}
+    context.update({'plots': plots})
     return render(request, 'Core/reg_home.html', context=context)
 
 
@@ -164,3 +211,4 @@ def add_sensor(request, plant_id=None):
         return redirect('reg_index')
     else:
         pass
+

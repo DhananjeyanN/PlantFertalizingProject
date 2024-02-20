@@ -39,7 +39,7 @@
                             <!--            data-bs-toggle targets id given to render                -->
                         </button>
                         <!-- Use d-flex and justify-content-end to push button to the right -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        <button type="button" id="detail_info{{plant.name}}" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal{{plant.id}}">More Info
                             <!--            data-bs-toggle targets id given to render                -->
                         </button>
@@ -170,6 +170,8 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-3" id="plot-container">
+        </div>
         <div class="col-lg-3">
             <div class="chart-container">
                 <canvas id="detailChartTemp{{plant.id}}"></canvas>
@@ -330,9 +332,43 @@
 
 
 </div>
-
+<div class="container mt-5">
+    <!-- Place to render Plotly plots -->
+    {% for _ in plots %}
+        <div id="plot{{ forloop.counter }}"></div>
+    {% endfor %}
+</div>
+<div class="container mt-5">
+    <!-- Place to render Plotly plots -->
+    {% for _ in detail_plots %}
+        <div id="detail_plot{{ forloop.counter }}"></div>
+    {% endfor %}
+</div>
 </div>
 <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        {% for plot_json in plots %}
+            var plot = JSON.parse('{{ plot_json|safe }}');
+            Plotly.newPlot('plot{{ forloop.counter }}', plot.data, plot.layout);
+        {% endfor %}
+    });
+        document.addEventListener('DOMContentLoaded', function() {
+        {% for plant in plants %}
+        var buttonId = 'detail_info' + plant.name;
+        console.log(buttonId);
+        var plotButton = document.getElementById('detail_info' + plant.name);
+        plotButton.addEventListener('click', function(){
+        var plotContainer = document.getElementById('plot-container');
+                console.log('detail info button is clicked')
+                {% for plot_json in detail_plots %}
+            var plot = JSON.parse('{{ plot_json|safe }}');
+                            var plant = plot.data[0]['name'];
+            Plotly.newPlot('plot-container{{ forloop.counter }}', plot.data, plot.layout);
+        {% endfor %}
+        });
+        {% endfor %}
+
+    });
       var data = JSON.parse('{{ data | safe }}');
       var detail_data = JSON.parse('{{ detail_data | safe }}');
 
