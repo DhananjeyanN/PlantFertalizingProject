@@ -1,0 +1,33 @@
+{% block extra_js %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% for plot_json in plots %}
+            var plot = JSON.parse('{{ plot_json|safe }}');
+            Plotly.newPlot('plot{{ forloop.counter }}', plot.data, plot.layout);
+        {% endfor %}
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        {% for plot_json in detail_plots %}
+            var plot = JSON.parse('{{ plot_json|safe }}');
+            Plotly.newPlot('plot{{ forloop.counter }}', plot.data, plot.layout);
+        {% endfor %}
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Your existing HTML for displaying plants -->
+<div class="container mt-5">
+    <!-- Place to render Plotly plots -->
+    {% for _ in plots %}
+        <div id="plot{{ forloop.counter }}"></div>
+    {% endfor %}
+</div>
+<div class="container mt-5">
+    <!-- Place to render Plotly plots -->
+    {% for _ in detail_plots %}
+        <div id="detail_plot{{ forloop.counter }}"></div>
+    {% endfor %}
+</div>
+{% endblock %}

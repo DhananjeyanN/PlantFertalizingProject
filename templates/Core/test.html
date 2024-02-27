@@ -1,0 +1,11 @@
+                {% for k, v in plotly_plots.items %}
+                    {% if k == plant.name %}
+                        {% for key, val in v %}
+                            {% if key == 'm_temp' %}
+                                {% autoescape off %}
+                                {{ val }}
+                                {% endautoescape %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
