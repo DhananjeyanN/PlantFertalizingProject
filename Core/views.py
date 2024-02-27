@@ -87,15 +87,15 @@ def reg_index(request):
                 if k == 'date_time':
                     continue
                 print(k)
-                fig = go.Figure()
+                fig = go.Figure(layout=go.Layout(autosize=True))
                 fig.update_layout(
                     title={
                         'text': k,
                         'y': 0.9,
                         'x': 0.5,
                         'xanchor': 'center',
-                        'yanchor': 'top'
-                    }
+                        'yanchor': 'top',
+                    },
                 )
                 scatter = go.Scatter(x=date_time, y=v, mode='lines+markers', name=plant_name, opacity=0.8, marker_color='green')
                 fig.add_trace(scatter)
