@@ -39,7 +39,7 @@
                             <!--            data-bs-toggle targets id given to render                -->
                         </button>
                         <!-- Use d-flex and justify-content-end to push button to the right -->
-                        <button type="button" id="detail_info{{plant.name}}" class="btn btn-primary" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal{{plant.id}}">More Info
                             <!--            data-bs-toggle targets id given to render                -->
                         </button>
@@ -169,37 +169,95 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-3" id="plot-container">
-        </div>
-        <div class="col-lg-3">
+    <div class="row" style="max-width:500px;">
+        <div class="col-lg-7">
             <div class="chart-container">
-                <canvas id="detailChartTemp{{plant.id}}"></canvas>
+                {% for k, v in plotly_plots.items %}
+                    {% if k == plant.name %}
+                        {% for key, val in v.items %}
+                            {% if key == 'm_temp' %}
+                                {% autoescape off %}
+                                {{ val }}
+                                {% endautoescape %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-7">
             <div class="chart-container">
-                <canvas id="detailChartEC{{plant.id}}"></canvas>
+                {% for k, v in plotly_plots.items %}
+                    {% if k == plant.name %}
+                        {% for key, val in v.items %}
+                            {% if key == 'm_ec' %}
+                                {% autoescape off %}
+                                {{ val }}
+                                {% endautoescape %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-12">
             <div class="chart-container">
-                <canvas id="detailChartNitrogen{{plant.id}}"></canvas>
+                {% for k, v in plotly_plots.items %}
+                    {% if k == plant.name %}
+                        {% for key, val in v.items %}
+                            {% if key == 'm_nitrogen' %}
+                                {% autoescape off %}
+                                {{ val }}
+                                {% endautoescape %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-12">
             <div class="chart-container">
-                <canvas id="detailChartPhosphorus{{plant.id}}"></canvas>
+                {% for k, v in plotly_plots.items %}
+                    {% if k == plant.name %}
+                        {% for key, val in v.items %}
+                            {% if key == 'm_phosphorus' %}
+                                {% autoescape off %}
+                                {{ val }}
+                                {% endautoescape %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-12">
             <div class="chart-container">
-                <canvas id="detailChartPotassium{{plant.id}}"></canvas>
+                {% for k, v in plotly_plots.items %}
+                    {% if k == plant.name %}
+                        {% for key, val in v.items %}
+                            {% if key == 'm_potassium' %}
+                                {% autoescape off %}
+                                {{ val }}
+                                {% endautoescape %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-12">
             <div class="chart-container">
-                <canvas id="detailChartPH{{plant.id}}"></canvas>
+                {% for k, v in plotly_plots.items %}
+                    {% if k == plant.name %}
+                        {% for key, val in v.items %}
+                            {% if key == 'm_ph' %}
+                                {% autoescape off %}
+                                {{ val }}
+                                {% endautoescape %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -332,43 +390,12 @@
 
 
 </div>
-<div class="container mt-5">
-    <!-- Place to render Plotly plots -->
-    {% for _ in plots %}
-        <div id="plot{{ forloop.counter }}"></div>
-    {% endfor %}
+                  {% autoescape off %}
+                  {{ plotly_plots.potato.m_temp }}
+                  {% endautoescape %}
 </div>
-<div class="container mt-5">
-    <!-- Place to render Plotly plots -->
-    {% for _ in detail_plots %}
-        <div id="detail_plot{{ forloop.counter }}"></div>
-    {% endfor %}
-</div>
-</div>
-<script>
-      document.addEventListener('DOMContentLoaded', function() {
-        {% for plot_json in plots %}
-            var plot = JSON.parse('{{ plot_json|safe }}');
-            Plotly.newPlot('plot{{ forloop.counter }}', plot.data, plot.layout);
-        {% endfor %}
-    });
-        document.addEventListener('DOMContentLoaded', function() {
-        {% for plant in plants %}
-        var buttonId = 'detail_info' + plant.name;
-        console.log(buttonId);
-        var plotButton = document.getElementById('detail_info' + plant.name);
-        plotButton.addEventListener('click', function(){
-        var plotContainer = document.getElementById('plot-container');
-                console.log('detail info button is clicked')
-                {% for plot_json in detail_plots %}
-            var plot = JSON.parse('{{ plot_json|safe }}');
-                            var plant = plot.data[0]['name'];
-            Plotly.newPlot('plot-container{{ forloop.counter }}', plot.data, plot.layout);
-        {% endfor %}
-        });
-        {% endfor %}
 
-    });
+<script>
       var data = JSON.parse('{{ data | safe }}');
       var detail_data = JSON.parse('{{ detail_data | safe }}');
 
@@ -383,7 +410,6 @@
       remaining_hours += 1;
        remaining_minutes = 0;}
       var formattedTime = '-' + remaining_hours + ':' + remaining_minutes;
-      console.log(formattedTime)
       return formattedTime;
       }
       // Converts a timestamp to day
@@ -416,27 +442,14 @@
               },
               options: {
                   responsive: true,
-                  maintainAspectRatio: false,
+                  maintainAspectRatio: true,
                   scales: {
                       y: {
                           beginAtZero: true
                       },
-<!--                      x:{-->
-<!--                         type:"linear",-->
-<!--                         ticks:{-->
-<!--                         callback:function(value, index, values){-->
-<!--                         if (index == 0) return "-24";-->
-<!--                         if (index === values.length - 1) return "0";-->
-<!--                         return "";-->
-<!--                         },-->
-<!--                         stepSize: 1,-->
-<!--                         autoskip: false,-->
-<!--                         },-->
-<!--                         title: {-->
-<!--                         display: true,-->
-<!--                         text: "hours ago"-->
-<!--                         }-->
-<!--                      }-->
+                      x:{
+                          beginAtZero: true
+                      }
                   }
               }
           });
@@ -448,17 +461,17 @@
           // For Home Page Chart
           drawChart('myChart{{plant.id}}', '{{plant.name}}', 'Moisture',data['{{ plant.name }}'].date_time, data['{{ plant.name }}'].m_moist);
 
-          // Modal 'show' Event
-          var myModalEl = document.getElementById('exampleModal{{plant.id}}');
-          myModalEl.addEventListener('show.bs.modal', function (e) {
-              // For Detailed Info Page Charts
-              drawChart('detailChartTemp{{plant.id}}', '{{plant.name}}', 'Temperature',detail_data['{{ plant.name }}'].date_time, detail_data['{{ plant.name }}'].m_temp);
-              drawChart('detailChartEC{{plant.id}}', '{{plant.name}}', 'EC', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ec);
-              drawChart('detailChartNitrogen{{plant.id}}', '{{plant.name}}', 'Nitrogen', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_nitrogen);
-              drawChart('detailChartPhosphorus{{plant.id}}', '{{plant.name}}', 'Phosphorus', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_phosphorus);
-              drawChart('detailChartPotassium{{plant.id}}', '{{plant.name}}', 'Potassium', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_potassium);
-              drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);
-          });
+<!--          // Modal 'show' Event-->
+<!--          var myModalEl = document.getElementById('exampleModal{{plant.id}}');-->
+<!--          myModalEl.addEventListener('show.bs.modal', function (e) {-->
+<!--              // For Detailed Info Page Charts-->
+<!--              drawChart('detailChartTemp{{plant.id}}', '{{plant.name}}', 'Temperature',detail_data['{{ plant.name }}'].date_time, detail_data['{{ plant.name }}'].m_temp);-->
+<!--              drawChart('detailChartEC{{plant.id}}', '{{plant.name}}', 'EC', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ec);-->
+<!--              drawChart('detailChartNitrogen{{plant.id}}', '{{plant.name}}', 'Nitrogen', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_nitrogen);-->
+<!--              drawChart('detailChartPhosphorus{{plant.id}}', '{{plant.name}}', 'Phosphorus', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_phosphorus);-->
+<!--              drawChart('detailChartPotassium{{plant.id}}', '{{plant.name}}', 'Potassium', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_potassium);-->
+<!--              drawChart('detailChartPH{{plant.id}}', '{{plant.name}}', 'pH', detail_data['{{ plant.name }}'].date_time,detail_data['{{ plant.name }}'].m_ph);-->
+<!--          });-->
       {% endfor %}
 
 
