@@ -8,7 +8,7 @@ from accounts.models import SiteProfile
 import json
 from plotly.offline import plot
 import plotly.graph_objs as go
-
+import pytz
 # Create your views here.
 def index(request):
     profile = SiteProfile.objects.all().first()
@@ -20,6 +20,7 @@ def index(request):
 
 
 def reg_index(request):
+    local_tz = pytz.timezone('America/Los_Angeles')
     profile = SiteProfile.objects.all().first()
     if request.user.is_authenticated:
 
@@ -77,6 +78,8 @@ def reg_index(request):
             # print(plant, 'DAPLANt')
             # print(plot_data, 'PLOT DATA')
             date_time = plot_data['date_time']
+            print(date_time, 'date_time')
+            date_time = [(datetime.strptime(data, "%Y-%m-%dT%H:%M:%S%z")).astimezone(local_tz) for data in date_time]
             # plot_data.pop('date_time')
 
             # print(date_time, 'TIMEE')
@@ -87,7 +90,7 @@ def reg_index(request):
                 if k == 'date_time':
                     continue
                 print(k)
-                fig = go.Figure(layout=go.Layout(autosize=True))
+                fig = go.Figure(layout=go.Layout(width=525, height=700))
                 fig.update_layout(
                     title={
                         'text': k,
@@ -97,6 +100,44 @@ def reg_index(request):
                         'yanchor': 'top',
                     },
                 )
+                fig.update_layout(
+                    xaxis=dict(
+                        rangeselector=dict(
+                            buttons=list([
+                                dict(count=1,
+                                     label="1d",
+                                     step="day",
+                                     stepmode="todate"),
+                                dict(count=6,
+                                     label="6m",
+                                     step="month",
+                                     stepmode="todate"),
+                                dict(count=1,
+                                     label="year",
+                                     step="year",
+                                     stepmode="todate"),
+                                dict(step="all")
+                            ])
+                        ),
+                        rangeslider=dict(
+                            visible=True
+                        ),
+                        type="date"
+                    )
+                )
+                fig.update_layout(
+                    autosize=False,
+                    width=500,
+                    height=500,
+                    margin=dict(
+                        l=10,
+                        r=20,
+                        b=50,
+                        t=50,
+                        pad=4
+                    )
+                )
+
                 scatter = go.Scatter(x=date_time, y=v, mode='lines+markers', name=plant_name, opacity=0.8, marker_color='green')
                 fig.add_trace(scatter)
                 plot_div = plot(fig, output_type='div', include_plotlyjs=False, image_width=200)
