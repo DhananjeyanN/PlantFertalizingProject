@@ -4,15 +4,15 @@
 <body>
 <div class="container mt-5">
     <!--    container mt-5 boostrap classes for styling-->
-    <h1 class="text-center mb-5"> Plant Home </h1> #displays heading
+    <h1 class="text-center mb-5" style="color:#e7cd78; font-family: 'Glacial Indifference', sans-serif; ">PLANT HOME </h1>
     <div class="row">
         <!-- div is used to contain parts of content of webpage  -->
         {% if data %}
         {% for plant in plants %}
         <div class="col-12 mt-3">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h2 class="card-title">{{plant.name}}</h2>
+            <div class="card h-100" style="background-color:#F5F1ED;">
+                <div class="card-header" style="background-color:#F5F1ED;">
+                    <h2 class="card-title" style="color:#252323; font-family: 'Glacial Indifference', sans-serif;">{{plant.name}}</h2>
                 </div>
                 <div class="card-body d-flex flex-column">
                     <!-- Image and Chart Row -->
@@ -20,14 +20,21 @@
                         <!-- Plant Image Column -->
                         <div class="col-md-4 col-sm-12 mb-3">
                             <!-- Stack on small screens, side-by-side on medium and up -->
-                            <img src="{{ plant.photo.url }}" alt="{{ plant.name }}" class="img-fluid">
+                            <img src="{{ plant.photo.url }}" alt="{{ plant.name }}" class="img-fluid" style="border-radius: 50%;">
                             <!-- Ensure image is responsive -->
                         </div>
                         <!-- Chart Column -->
                         <div class="col-md-8 col-sm-12 d-flex flex-column">
                             <!-- Stack on small screens, side-by-side on medium and up -->
                             <div class="chart-container flex-grow-1">
-                                <canvas id="myChart{{plant.id}}"></canvas>
+<!--                                <canvas id="myChart{{plant.id}}"></canvas>-->
+                                    {% for k, v in m_moist_graphs.items %}
+                                        {% if k == plant.name %}
+                                            {% autoescape off %}
+                                            {{ v }}
+                                            {% endautoescape %}
+                                        {% endif %}
+                                    {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -35,6 +42,7 @@
 
                     <div class="d-flex justify-content-between mt-3">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+
                                 data-bs-target="#addSensorModal{{plant.id}}">Add Sensor
                             <!--            data-bs-toggle targets id given to render                -->
                         </button>
@@ -387,13 +395,7 @@
         </div>
     </div>
 </div>
-
-
-</div>
-                  {% autoescape off %}
-                  {{ plotly_plots.potato.m_temp }}
-                  {% endautoescape %}
-</div>
+</body>
 
 <script>
       var data = JSON.parse('{{ data | safe }}');

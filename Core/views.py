@@ -25,14 +25,14 @@ def reg_index(request):
     if request.user.is_authenticated:
 
         plants = Plant.objects.filter(user=request.user)
+        sensors = Sensor.objects.filter(user=request.user)
         plant_names = [plant.name.replace(" ", "_") for plant in plants]
         data = {}
         detail_data = {}
-        last_24_hours_ago = datetime.now() - timedelta(hours=1000)
         latest_data = []
         for plant in plants:
             plant_dict = {}
-            plant_data = DataTable.objects.filter(plant=plant, date_time__gte=last_24_hours_ago)
+            plant_data = DataTable.objects.filter(plant=plant)
             ec_exists = DataTable.objects.filter(plant=plant).exclude(m_ec__isnull=True).exists()
             if ec_exists:
                 latest_ec_data = DataTable.objects.filter(plant=plant).exclude(m_ec__isnull=True).latest('date_time')
@@ -100,30 +100,37 @@ def reg_index(request):
                         'yanchor': 'top',
                     },
                 )
+                now = datetime.now()
                 fig.update_layout(
-                    xaxis=dict(
-                        rangeselector=dict(
+                    updatemenus=[
+                        dict(
+                            type="buttons",
+                            direction="right",
                             buttons=list([
-                                dict(count=1,
-                                     label="1d",
-                                     step="day",
-                                     stepmode="todate"),
-                                dict(count=6,
-                                     label="6m",
-                                     step="month",
-                                     stepmode="todate"),
-                                dict(count=1,
-                                     label="year",
-                                     step="year",
-                                     stepmode="todate"),
-                                dict(step="all")
-                            ])
-                        ),
-                        rangeslider=dict(
-                            visible=True
-                        ),
-                        type="date"
-                    )
+                                dict(
+                                    args=[{"xaxis.range": [now - timedelta(days=1), now]}],
+                                    label="Last Day",
+                                    method="relayout"
+                                ),
+                                dict(
+                                    args=[{"xaxis.range": [now - timedelta(days=30), now]}],
+                                    label="Last Month",
+                                    method="relayout"
+                                ),
+                                dict(
+                                    args=[{"xaxis.range": [now - timedelta(days=365), now]}],
+                                    label="Last Year",
+                                    method="relayout"
+                                ),
+                            ]),
+                            pad={"r": 1, "t": 1},
+                            showactive=True,
+                            x=0,
+                            xanchor="left",
+                            y=.95,
+                            yanchor="top"
+                        )
+                    ]
                 )
                 fig.update_layout(
                     autosize=False,
@@ -138,17 +145,87 @@ def reg_index(request):
                     )
                 )
 
-                scatter = go.Scatter(x=date_time, y=v, mode='lines+markers', name=plant_name, opacity=0.8, marker_color='green')
+                scatter = go.Scatter(x=date_time, y=v, mode='lines+markers', name=plant_name, opacity=0.8, marker_color='#e7cd78')
                 fig.add_trace(scatter)
                 plot_div = plot(fig, output_type='div', include_plotlyjs=False, image_width=200)
                 plotly_plots[plant_name].update({k : plot_div})
 
-        print(detail_data['potato']['date_time'], 'date2')
-
-
+        print(data, 'data')
+        m_moist_graphs = {}
+        for plant_name, v in data.items():
+            for k, va in v.items():
+                if k == 'date_time':
+                    dates = va
+                    dates = [(datetime.strptime(data, "%Y-%m-%dT%H:%M:%S%z")).astimezone(local_tz) for data in dates]
+                if k == 'm_moist':
+                    m_moist = va
+            fig = go.Figure(layout=go.Layout(width=525, height=700))
+            fig.update_layout(
+                autosize=False,
+                width=700,
+                height=412,
+                margin=dict(
+                    l=10,
+                    r=10,
+                    b=00,
+                    t=40,
+                    pad=4
+                )
+            )
+            fig.update_layout(
+                title='m_moist Data',
+                plot_bgcolor='rgba(245, 241, 237, 1)',
+                paper_bgcolor='rgba(0, 0, 0, 0)',
+                updatemenus=[
+                    dict(
+                        type="buttons",
+                        direction="right",
+                        buttons=list([
+                            dict(
+                                args=[{"xaxis.range": [now - timedelta(days=1), now]}],
+                                label="Last Day",
+                                method="relayout"
+                            ),
+                            dict(
+                                args=[{"xaxis.range": [now - timedelta(days=30), now]}],
+                                label="Last Month",
+                                method="relayout"
+                            ),
+                            dict(
+                                args=[{"xaxis.range": [now - timedelta(days=365), now]}],
+                                label="Last Year",
+                                method="relayout"
+                            ),
+                        ]),
+                        pad={"r": 1, "t": 1},
+                        showactive=True,
+                        x=0,
+                        xanchor="left",
+                        y=1,
+                        yanchor="top"
+                    )
+                ]
+            )
+            fig.update_xaxes(
+                gridcolor='lightgrey',
+                ticks='outside',
+                mirror=True,
+                linecolor='#252323'
+            )
+            fig.update_yaxes(
+                gridcolor='lightgrey',
+                ticks='outside',
+                mirror=True,
+                linecolor='#252323'
+            )
+            scatter = go.Scatter(x=dates, y=m_moist, mode='lines+markers', name=plant_name, opacity=0.8, marker_color='#e7cd78')
+            fig.add_trace(scatter)
+            plot_div = plot(fig, output_type='div', include_plotlyjs=False, image_width=200)
+            m_moist_graphs[plant_name] = plot_div
+        print(m_moist_graphs)
         context = {'plants': plants, 'names': plant_names, 'temps': plant_temperatures, 'profile': profile,
                    'data': json.dumps(data), 'latest_data': latest_data, 'detail_data': json.dumps(detail_data),
-                   "ids": json.dumps(plant_ids),'plotly_plots' : plotly_plots
+                   "ids": json.dumps(plant_ids),'plotly_plots' : plotly_plots, 'm_moist_graphs' : m_moist_graphs, 'sensor' : sensors
                    }
     else:
         context = {'profile': profile}

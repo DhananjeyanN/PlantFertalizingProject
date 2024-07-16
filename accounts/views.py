@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from accounts.models import SiteProfile
 from django.contrib import messages, auth
 from rest_framework.authtoken.models import Token
-from accounts.forms import RegistrationForm, ProfileForm
+from accounts.forms import RegistrationForm, ProfileForm, LoginForm
 from accounts.models import Profile
 import requests
 
@@ -38,7 +38,7 @@ def register(request):
 def login(request):
     profile = SiteProfile.objects.all().first()
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
+        form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = auth.authenticate(username=form.cleaned_data.get('username'),
                                      password=form.cleaned_data.get('password'))
@@ -66,8 +66,9 @@ def logout(request):
 
 
 def profile(request, user_id):
+    profile = SiteProfile.objects.all().first()
     user_profile = Profile.objects.get(user_id=user_id)
-    context = {'user_profile': user_profile}
+    context = {'user_profile': user_profile, 'profile':profile}
     return render(request, 'accounts/profile.html', context=context)
 
 

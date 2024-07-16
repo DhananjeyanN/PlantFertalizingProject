@@ -30,6 +30,13 @@ class RegistrationForm(forms.ModelForm):
             self.fields[field].widget.attrs['placeholder'] = f'Enter {field}'
 
 
+class LoginForm(AuthenticationForm):
+    class Meta:
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+        }
+
 # class EditPostForm(forms.ModelForm):
 #     class Meta:
 #         model = Post
